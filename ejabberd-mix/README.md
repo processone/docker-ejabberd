@@ -13,6 +13,14 @@ git clone https://github.com/processone/ejabberd.git
 docker run --rm -v $(pwd):$(pwd) -w $(pwd) ejabberd/mix do deps.get, deps.compile, compile
 ```
 
+Alternatively if you do not have Git installed, you can do:
+```bash
+wget https://github.com/processone/ejabberd/archive/master.zip
+unzip ejabberd-master
+cd ejabberd-master
+docker run --rm -v $(pwd):$(pwd) -w $(pwd) ejabberd/mix do deps.get, deps.compile, compile
+```
+
 ## Run ejabberd with mix command-line tool attached
 
 ```bash
