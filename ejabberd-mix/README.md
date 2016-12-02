@@ -23,11 +23,23 @@ docker run --rm -v $(pwd):$(pwd) -w $(pwd) ejabberd/mix do deps.get, deps.compil
 
 ## Run ejabberd with mix command-line tool attached
 
+You can customize the configuration by editing the file `config/ejabberd.yml`. As a default, you can run ejabberd with console attached on "localhost" domain:
+
 ```bash
 docker run --rm -it -p 5222:5222 -p 5280:5280 -v $(pwd):$(pwd) -w $(pwd) --entrypoint="/usr/bin/iex" ejabberd/mix -S mix
 ```
 
-You can then create a user from Elixir and connect with an XMPP client.
+You can then create a user from Elixir shell:
+
+```bash
+
+Erlang/OTP 19 [erts-8.1] [source] [64-bit] [smp:2:2] [async-threads:10] [kernel-poll:false]
+Interactive Elixir (1.3.4) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> :ejabberd_auth.try_register("test", "localhost", "passw0rd")
+{:atomic, :ok}
+```
+
+You can then connect with user test@localhost (password: passw0rd) on server on localhost port 5222 and use those parameters to connect with an XMPP client.
 
 ## Get into the container
 
@@ -35,6 +47,15 @@ If you want to run Erlang command line, you can do so by opening a shell inside 
 
 ```bash
 docker run -it -v $(pwd):$(pwd) -w $(pwd) --entrypoint="/bin/sh" ejabberd/mix
+```
+
+## Getting Elixir version
+
+```bash
+docker run -it --rm -v $(pwd):$(pwd) -w $(pwd) ejabberd/mix --version
+Erlang/OTP 19 [erts-8.1] [source] [64-bit] [smp:2:2] [async-threads:10] [kernel-poll:false]
+
+Mix 1.3.4
 ```
 
 ## Build the image
