@@ -1,6 +1,6 @@
 ## Docker image for ejabberd developers
 
-Thanks to this image, you can build ejabberd with dependencies provided in Docker image, without the need to install build software (despite Docker) directly on your own machine.
+Thanks to this image, you can build ejabberd with dependencies provided in Docker image, without the need to install build software (beside Docker) directly on your own machine.
 
 Please note that this image can likely be reused as is to build other Erlang or Elixir software.
 
