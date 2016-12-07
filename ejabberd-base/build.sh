@@ -1,5 +1,7 @@
 #/bin/bash
 
+VERSION=16.12-beta1
+
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color]]'
 
@@ -28,4 +30,4 @@ fi
 
 # Build ejabberd base container
 echo -e "${GREEN}Building ejabberd Community Edition container${NC}"
-docker build -t ejabberd/ecs .
+docker build -t ejabberd/ecs:${VERSION} .
