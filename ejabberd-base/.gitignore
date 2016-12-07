@@ -1,0 +1,4 @@
+db/
+ejbuild/
+*.tar.gz
+
