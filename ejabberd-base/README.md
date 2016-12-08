@@ -38,11 +38,19 @@ This command will use default configuration file and XMPP domain "localhost".
 
 ### Running ejabberd with your config file and database host directory
 
-The following command 
+The following command will pass config file using Docker volume feature and share local directory to store database:
 
 ```bash
 mkdir db
 docker run --name ejabberd -v $(pwd)/ejabberd.yml:/home/p1/cfg/ejabberd.yml -v $(pwd)/db:/home/p1/db -p 5222:5222 ejabberd/ecs
+```
+
+### Checking ejabberd log file
+
+You can execute a Docker command to check the content of the log file from inside to container, even if you do not put it on a shared persistent drive:
+
+```bash
+docker exec -it ejabberd /usr/bin/tail -f /home/p1/log/ejabberd.log
 ```
 
 ## Docker image advanced configuration
