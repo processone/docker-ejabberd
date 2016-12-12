@@ -1,4 +1,5 @@
 db/
 ejbuild/
+log/
 *.tar.gz
 
