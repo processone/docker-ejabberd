@@ -36,7 +36,7 @@
 ## 4: Info
 ## 5: Debug
 ##
-loglevel: 4
+loglevel: 3
 
 ##
 ## rotation: Describe how to rotate logs. Either size and/or date can trigger
@@ -55,7 +55,7 @@ loglevel: 4
 ##
 log_rotate_size: 10485760
 log_rotate_date: ""
-log_rotate_count: 1
+log_rotate_count: 3
 
 ##
 ## overload protection: If you want to limit the number of messages per second
@@ -168,6 +168,19 @@ listen:
     http_bind: true
     ## register: true
     captcha: true
+    request_handlers:
+      "/oauth": ejabberd_oauth
+      "/api": mod_http_api
+
+# We can use API from local machine to pass ejabberd commands
+api_permissions:
+  "API used from localhost allows all calls":
+    - who:
+      - ip: "127.0.0.1/8"
+    - what:
+      - "*"
+      - "!stop"
+      - "!start"
 
 ##
 ## s2s_use_starttls: Enable STARTTLS + Dialback for S2S connections.
