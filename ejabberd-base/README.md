@@ -26,6 +26,16 @@ If needed you can restart the stopped ejabberd container with:
 docker restart ejabberd
 ```
 
+### Creating admin user
+
+When the container is running (and thus ejabberd), you can exec commands inside the container. The ejabberd-api command-line tool can be used to exercise the API directly from the container, even if the API is not exposed to the outside world.
+
+To create an admin user (or any other user), you can use the following command:
+
+```bash
+docker exec -it ejabberd /home/p1/ejabberd-api register --endpoint=http://127.0.0.1:5280/ --jid=admin@localhost --password=passw0rd
+```
+
 ### Running ejabberd with Erlang console attached
 
 If you would like to run it with console attached you can use the `console` command:
@@ -42,7 +52,7 @@ The following command will pass config file using Docker volume feature and shar
 
 ```bash
 mkdir db
-docker run --name ejabberd -v $(pwd)/ejabberd.yml:/home/p1/cfg/ejabberd.yml -v $(pwd)/db:/home/p1/db -p 5222:5222 ejabberd/ecs
+docker run --name -d ejabberd -v $(pwd)/ejabberd.yml:/home/p1/cfg/ejabberd.yml -v $(pwd)/db:/home/p1/db -p 5222:5222 ejabberd/ecs
 ```
 
 ### Checking ejabberd log file
@@ -101,3 +111,5 @@ Run the build script to generate ejabberd Community Server base image from ejabb
 ### TODO
 
 - Embed command-line tool for ejabberd API to be able to create admin user for ejabberd.
+- Rebuild last version of ejabberd-api tool when creating container.
+- Manually build Erlang and Elixir in ejabberd-mix image so that we can rely on Alpine stable.
