@@ -25,12 +25,13 @@ COPY ejabberd.yml ${HOME}/cfg/
 
 # TODO Make it possible to define which version of Alpine we would like to use.
 RUN echo \
-  && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" > /etc/apk/repositories \
+  && echo @stable "http://dl-cdn.alpinelinux.org/alpine/v3.4/main" > /etc/apk/repositories \
+  && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
   && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
   && echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
 
   apk upgrade --update musl && \
-  apk add bash su-exec libstdc++ ncurses-libs openssl expat yaml zlib && \
+  apk add bash su-exec libstdc++ ncurses-libs openssl expat@stable yaml zlib && \
   rm -rf /var/cache/apk/*
 
 EXPOSE 5222 5269 5280
@@ -48,6 +49,7 @@ VOLUME ["/home/p1/log/", "/home/p1/db/"]
 WORKDIR /home/p1/ejabberd
 
 COPY docker-entrypoint.sh /
+COPY ejabberd-api /home/p1/
 
 # CMD ./bin/ejabberd foreground
 ENTRYPOINT ["/docker-entrypoint.sh"]
