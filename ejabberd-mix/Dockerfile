@@ -10,9 +10,12 @@ RUN echo \
   && echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
 
   # Install elixir from apk
-  apk add --no-cache build-base git zlib-dev openssl-dev yaml-dev expat-dev@stable \
+  apk upgrade --update musl && \
+  apk add build-base git zlib-dev openssl-dev yaml-dev expat-dev@stable \
    elixir erlang-crypto erlang-syntax-tools erlang-parsetools \
-   erlang-eunit erlang-mnesia
+   erlang-eunit erlang-mnesia && \
+  rm -rf /var/cache/apk/*
+
 
 # Install Hex+Rebar
 RUN mix local.hex --force && \
