@@ -1,19 +1,15 @@
-FROM alpine:3.4
+FROM alpine:3.5
 MAINTAINER ProcessOne <contact@process-one.net>
 
 RUN echo \
-  # Replacing default repositories with edge ones as we need Elixir 1.3.x
-  # Previous version of Elixir do not handle our deps properly
-  && echo @stable "http://dl-cdn.alpinelinux.org/alpine/v3.4/main" > /etc/apk/repositories \
-  && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
-  && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
-  && echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+  && echo "http://nl.alpinelinux.org/alpine/v3.5/main" > /etc/apk/repositories \
+  && echo "http://nl.alpinelinux.org/alpine/v3.5/community" >> /etc/apk/repositories && \
 
   # Install elixir from apk
   apk upgrade --update musl && \
-  apk add build-base git zlib-dev openssl-dev yaml-dev expat-dev@stable \
+  apk add build-base git zlib-dev openssl-dev yaml-dev expat-dev sqlite-dev \
    elixir erlang-crypto erlang-syntax-tools erlang-parsetools \
-   erlang-eunit erlang-mnesia && \
+   erlang-eunit erlang-mnesia erlang-inets && \
   rm -rf /var/cache/apk/*
 
 
