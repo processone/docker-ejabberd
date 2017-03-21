@@ -1,6 +1,6 @@
 #/bin/bash
 
-VERSION=16.12-beta1
+VERSION=17.03
 
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color]]'
@@ -8,20 +8,30 @@ NC='\033[0m' # No Color]]'
 # TODO optional clean
 # rm -rf ejbuild 
 
-echo -e "${GREEN}Pulling ejabberd build Docker image${NC}"
-docker pull ejabberd/mix
+#echo -e "${GREEN}Pulling ejabberd build Docker image${NC}"
+#docker pull ejabberd/mix  assume we build it ourself until latest image is uploaded
 
 echo -e "${GREEN}Cloning ejabberd${NC}"
 if [ ! -d ejbuild ]; then
-	git clone https://github.com/processone/ejabberd.git ejbuild 
+	git clone https://github.com/processone/ejabberd.git ejbuild
 fi
+(cd ejbuild; git checkout $VERSION)
+cat > ejbuild/vars.config <<EOF
+{mysql, true}.
+{pgsql, true}.
+{sqlite, true}.
+{zlib, true}.
+{redis, true}.
+{elixir, true}.
+{iconv, true}.
+EOF
 
 echo -e "${GREEN}Building ejabberd release${NC}"
 if [ ! -e ejabberd.tar.gz ]; then
 	# Copy release configuration
 	cp rel/*.exs ejbuild/rel/
-	# Force clock resync
-	docker run -it  --rm --privileged --entrypoint="/sbin/hwclock" ejabberd/mix -s
+	# Force clock resync ? why ?
+	#docker run -it  --rm --privileged --entrypoint="/sbin/hwclock" ejabberd/mix -s
 	# Build ejabberd and generate release
 	docker run -it -v $(pwd)/ejbuild:$(pwd)/ejbuild -w $(pwd)/ejbuild -e "MIX_ENV=prod" ejabberd/mix do deps.get, deps.compile, compile, release --env=prod
 	# Copy generated ejabberd release archive 
