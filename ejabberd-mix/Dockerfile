@@ -8,8 +8,9 @@ RUN echo \
   # Install elixir from apk
   apk upgrade --update musl && \
   apk add build-base git zlib-dev openssl-dev yaml-dev expat-dev sqlite-dev \
-   elixir erlang-crypto erlang-syntax-tools erlang-parsetools \
-   erlang-eunit erlang-mnesia erlang-inets && \
+   elixir erlang-crypto erlang-eunit erlang-mnesia erlang-xmerl erlang-erts \
+   erlang-tools erlang-os-mon erlang-syntax-tools erlang-parsetools \
+   erlang-runtime-tools erlang-reltool && \
   rm -rf /var/cache/apk/*
 
 
