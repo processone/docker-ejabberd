@@ -1,6 +1,6 @@
 #/bin/bash
 
-VERSION=17.03
+VERSION=17.07
 
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color]]'
@@ -32,7 +32,7 @@ if [ ! -e ejabberd.tar.gz ]; then
 	# Force clock resync ?
 	#docker run -it  --rm --privileged --entrypoint="/sbin/hwclock" ejabberd/mix -s
 	# Build ejabberd and generate release
-	docker run -it -v $(pwd)/ejbuild:$(pwd)/ejbuild -w $(pwd)/ejbuild -e "MIX_ENV=prod" ejabberd/mix do deps.get, deps.compile, compile, release --env=prod
+	docker run -it -v $(pwd)/ejbuild:$(pwd)/ejbuild -w $(pwd)/ejbuild -e "MIX_ENV=prod" ejabberd/mix do deps.get, deps.compile, compile, release.init, release --env=prod
 	# Copy generated ejabberd release archive 
 	cp ejbuild/_build/prod/rel/ejabberd/releases/*/ejabberd.tar.gz .
 fi
