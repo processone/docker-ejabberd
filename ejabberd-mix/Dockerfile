@@ -1,9 +1,9 @@
-FROM alpine:3.5
+FROM alpine:3.6
 MAINTAINER ProcessOne <contact@process-one.net>
 
 RUN echo \
-  && echo "http://nl.alpinelinux.org/alpine/v3.5/main" > /etc/apk/repositories \
-  && echo "http://nl.alpinelinux.org/alpine/v3.5/community" >> /etc/apk/repositories && \
+  && echo "http://nl.alpinelinux.org/alpine/v3.6/main" > /etc/apk/repositories \
+  && echo "http://nl.alpinelinux.org/alpine/v3.6/community" >> /etc/apk/repositories && \
 
   # Install elixir from apk
   apk upgrade --update musl && \
