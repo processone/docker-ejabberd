@@ -52,7 +52,7 @@ The following command will pass config file using Docker volume feature and shar
 
 ```bash
 mkdir db
-docker run --name -d ejabberd -v $(pwd)/ejabberd.yml:/home/p1/cfg/ejabberd.yml -v $(pwd)/db:/home/p1/db -p 5222:5222 ejabberd/ecs
+docker run -d --name ejabberd -v $(pwd)/ejabberd.yml:/home/p1/cfg/ejabberd.yml -v $(pwd)/db:/home/p1/db -p 5222:5222 ejabberd/ecs
 ```
 
 ### Checking ejabberd log file
