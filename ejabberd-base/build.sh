@@ -1,6 +1,6 @@
 #/bin/bash
 
-VERSION=17.07
+VERSION=17.08
 
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color]]'
