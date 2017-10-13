@@ -1,7 +1,7 @@
 FROM alpine:3.6
 MAINTAINER ProcessOne <contact@process-one.net>
 
-ENV REFRESHED_AT=2017-09-18 \
+ENV REFRESHED_AT=2017-10-13 \
     HOME=/home/p1 \
     TERM=xterm \
     LC_ALL=C.UTF-8 \
@@ -20,9 +20,9 @@ ENV P1DATA=${HOME}/db \
 COPY ejabberd.yml ${HOME}/cfg/
 
 # TODO Make it possible to define which version of Alpine we would like to use.
-RUN echo "http://nl.alpinelinux.org/alpine/v3.6/main" > /etc/apk/repositories && \
-    echo "http://nl.alpinelinux.org/alpine/v3.6/community" >> /etc/apk/repositories && \
-    apk upgrade --update musl && \
+#RUN echo "http://nl.alpinelinux.org/alpine/v3.6/main" > /etc/apk/repositories && \
+#    echo "http://nl.alpinelinux.org/alpine/v3.6/community" >> /etc/apk/repositories && \
+RUN apk upgrade --update musl && \
     apk add bash su-exec libstdc++ ncurses-libs openssl expat yaml zlib sqlite && \
     rm -rf /var/cache/apk/*
 
