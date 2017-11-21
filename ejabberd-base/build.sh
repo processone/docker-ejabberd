@@ -1,6 +1,6 @@
 #/bin/bash
 
-VERSION=17.09
+VERSION=17.11
 
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color]]'
@@ -15,7 +15,6 @@ if [ ! -d ejbuild ]; then
 	git clone https://github.com/processone/ejabberd.git ejbuild
 fi
 (cd ejbuild; git checkout master && git pull && git checkout $VERSION)
-cp mix.exs ejbuild
 cat > ejbuild/vars.config <<EOF
 {mysql, true}.
 {pgsql, true}.
