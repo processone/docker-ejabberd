@@ -1,7 +1,7 @@
-FROM alpine:3.6
+FROM alpine:3.7
 MAINTAINER ProcessOne <contact@process-one.net>
 
-ENV REFRESHED_AT=2017-11-21 \
+ENV REFRESHED_AT=2017-12-22 \
     HOME=/home/p1 \
     TERM=xterm \
     LC_ALL=C.UTF-8 \
