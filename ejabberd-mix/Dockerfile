@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:3.7
 MAINTAINER ProcessOne <contact@process-one.net>
 
 RUN apk upgrade --update musl && \
