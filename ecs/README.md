@@ -86,8 +86,9 @@ This is the kind of data you probably want to store on a persistent or local dri
 
 Here are the volume you may want to map:
 
-- /home/p1/log/: Directory containing log files
-- /home/p1/db/: Directory containing Mnesia database. You should backup or export the content of the directory to persistent storage (host storage, local storage, any storage plugin)
+- /home/ejabberd/log/: Directory containing log files
+- /home/ejabberd/db/: Directory containing Mnesia database. You should backup or export the content of the directory to persistent storage (host storage, local storage, any storage plugin)
+- /home/ejabberd/config/: Directory containing configuration and certificates
 
 ## Generating ejabberd release
 
@@ -100,7 +101,7 @@ The configuration of ejabberd Erlang/OTP release is customized with:
 - rel/config.exs: Customize ejabberd release
 - rel/dev.exs: ejabberd environment configuration for development release
 - rel/docker.exs: ejabberd environment configuration for production Docker release
-- ejabberd.yml: ejabberd default config file 
+- config/ejabberd.yml: ejabberd default config file 
 
 Run the build script to generate ejabberd Community Server base image from ejabberd master on Github:
 
