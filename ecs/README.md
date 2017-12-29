@@ -107,4 +107,3 @@ Run the build script to generate ejabberd Community Server base image from ejabb
 
 - Embed command-line tool for ejabberd API to be able to create admin user for ejabberd.
 - Rebuild last version of ejabberd-api tool when creating container.
-- Manually build Erlang and Elixir in ejabberd-mix image so that we can rely on Alpine stable.
