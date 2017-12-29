@@ -65,12 +65,6 @@ docker exec -it ejabberd /usr/bin/tail -f /home/p1/log/ejabberd.log
 
 ## Docker image advanced configuration
 
-### Files
-
-Here are the important files you can replace by mounting persistent disk or local directory:
-
-- /home/p1/cfg/ejabberd.yml: ejabberd configuration file.
-
 ### Ports
 
 ejabberd base Docker image exposes the following port:
