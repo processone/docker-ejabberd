@@ -33,7 +33,7 @@ When the container is running (and thus ejabberd), you can exec commands inside 
 To create an admin user (or any other user), you can use the following command:
 
 ```bash
-docker exec -it ejabberd /home/p1/ejabberd-api register --endpoint=http://127.0.0.1:5280/ --jid=admin@localhost --password=passw0rd
+docker exec -it ejabberd /home/ejabberd/bin/ejabberd-api register --endpoint=http://127.0.0.1:5280/ --jid=admin@localhost --password=passw0rd
 ```
 
 ### Running ejabberd with Erlang console attached
@@ -52,7 +52,7 @@ The following command will pass config file using Docker volume feature and shar
 
 ```bash
 mkdir db
-docker run -d --name ejabberd -v $(pwd)/ejabberd.yml:/home/p1/cfg/ejabberd.yml -v $(pwd)/db:/home/p1/db -p 5222:5222 ejabberd/ecs
+docker run -d --name ejabberd -v $(pwd)/ejabberd.yml:/home/ejabberd/cfg/ejabberd.yml -v $(pwd)/db:/home/ejabberd/db -p 5222:5222 ejabberd/ecs
 ```
 
 ### Checking ejabberd log file
@@ -60,7 +60,7 @@ docker run -d --name ejabberd -v $(pwd)/ejabberd.yml:/home/p1/cfg/ejabberd.yml -
 You can execute a Docker command to check the content of the log file from inside to container, even if you do not put it on a shared persistent drive:
 
 ```bash
-docker exec -it ejabberd /usr/bin/tail -f /home/p1/log/ejabberd.log
+docker exec -it ejabberd /usr/bin/tail -f /home/ejabberd/log/ejabberd.log
 ```
 
 ## Docker image advanced configuration
