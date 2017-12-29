@@ -111,12 +111,11 @@ hosts:
 ## automatically by ejabberd.
 ##
 certfiles:
-  - "/home/p1/ejabberd/config/server.pem"
+  - "/home/ejabberd/config/server.pem"
 ##   - "/etc/letsencrypt/live/example.org/*.pem"
 ##   - "/etc/letsencrypt/live/example.com/*.pem"
-##
-## If your system provides only a single CA file (CentOS/FreeBSD):
-## s2s_cafile: "/etc/ssl/certs/ca-bundle.pem"
+
+ca_file: "/home/ejabberd/config/cacert.pem"
 
 ###.  =================
 ###'  TLS configuration
@@ -127,10 +126,10 @@ define_macro:
     - "no_sslv3"
     - "cipher_server_preference"
     - "no_compression"
-##   'DH_FILE': "/path/to/dhparams.pem" # generated with: openssl dhparam -out dhparams.pem 2048
-##
-## c2s_dhfile: 'DH_FILE'
-## s2s_dhfile: 'DH_FILE'
+  'DH_FILE': "/home/ejabberd/config/dhparams.pem" # generated with: openssl dhparam -out dhparams.pem 2048
+
+c2s_dhfile: 'DH_FILE'
+s2s_dhfile: 'DH_FILE'
 c2s_ciphers: 'TLS_CIPHERS'
 s2s_ciphers: 'TLS_CIPHERS'
 c2s_protocol_options: 'TLS_OPTIONS'
@@ -148,7 +147,7 @@ listen:
     port: 5222
     ip: "::"
     module: ejabberd_c2s
-    ## starttls: true
+    starttls: true
     ##
     ## To enforce TLS encryption for client connections,
     ## use this instead of the "starttls" option:
@@ -237,6 +236,9 @@ listen:
   ##   request_handlers:
   ##     "": mod_http_upload
   ##   tls: true
+  ##   protocol_options: 'TLSOPTS'
+  ##   dhfile: 'DHFILE'
+  ##   ciphers: 'CIPHERS'
 
 ## Disabling digest-md5 SASL authentication. digest-md5 requires plain-text
 ## password storage (see auth_password_format option).
@@ -251,15 +253,6 @@ listen:
 ## You must specify 'certfiles' option
 ##
 s2s_use_starttls: optional
-
-##
-## domain_certfile: Specify a different certificate for each served hostname.
-##
-## host_config:
-##   "example.org":
-##     domain_certfile: "/path/to/example_org.pem"
-##   "example.com":
-##     domain_certfile: "/path/to/example_com.pem"
 
 ##
 ## S2S whitelist or blacklist
@@ -412,7 +405,7 @@ auth_method: internal
 ## SQLite:
 ##
 ## sql_type: sqlite
-## sql_database: "/home/p1/ejabberd/database/ejabberd.db"
+## sql_database: "/home/ejabberd/database/ejabberd.db"
 
 ##
 ## ODBC compatible or MSSQL server:
@@ -654,7 +647,7 @@ language: "en"
 ##
 ## Full path to a script that generates the image.
 ##
-## captcha_cmd: "/lib/ejabberd/priv/bin/captcha.sh"
+## captcha_cmd: "/home/ejabberd/lib/ejabberd-17.12/priv/bin/captcha.sh"
 
 ##
 ## Host for the URL and port where ejabberd listens for CAPTCHA requests.
@@ -758,6 +751,7 @@ modules:
     ## XEP compliant, but increases resource comsumption
     ## ignore_pep_from_offline: false
     last_item_cache: false
+    max_items_node: 10
     plugins:
       - "flat"
       - "pep" # pep requires mod_caps
@@ -804,7 +798,7 @@ modules:
     search: false
   mod_vcard_xupdate: {}
   ## Convert all avatars posted by Android clients from WebP to JPEG
-  ## mod_avatar:  # this module needs compile option
+  ## mod_avatar:  # this module needs compile option --enable-graphics
   ##   convert:
   ##     webp: jpeg
   mod_version: {}
