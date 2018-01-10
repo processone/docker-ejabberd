@@ -4,7 +4,7 @@ LABEL maintainer="ProcessOne <contact@process-one.net>" \
 
 # Install required dependencies
 RUN apk upgrade --update musl \
- && apk add build-base git zlib-dev openssl-dev yaml-dev expat-dev sqlite-dev \
+ && apk add build-base git zlib-dev openssl-dev yaml-dev expat-dev sqlite-dev uthash-dev \
             elixir erlang-crypto erlang-eunit erlang-mnesia erlang-xmerl erlang-erts \
             erlang-tools erlang-os-mon erlang-syntax-tools erlang-parsetools \
             erlang-runtime-tools erlang-reltool \
