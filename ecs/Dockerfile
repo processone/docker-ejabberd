@@ -6,29 +6,38 @@ ENV TERM=xterm \
     LANGUAGE=en_US.UTF-8 \
     REPLACE_OS_VARS=true \
     HOME=/home/ejabberd \
-    VERSION=${VERSION:-latest} \
-    ARCHIVE=ejabberd-${VERSION:-latest}.tar.gz
+    VERSION=${VERSION:-latest}
 LABEL maintainer="ProcessOne <contact@process-one.net>" \
-      product="Ejabberd Community Edition" \
+      product="Ejabberd Community Server" \
       version=$VERSION
 
 # Create directory structure and user for ejabberd
-RUN addgroup ejabberd -g 9000 && adduser -s /bin/sh -D -G ejabberd ejabberd -u 9000 \
+RUN addgroup ejabberd -g 9000 \
+ && adduser -s /bin/sh -D -G ejabberd ejabberd -u 9000 \
  && mkdir -p /home/ejabberd/config /home/ejabberd/db /home/ejabberd/log \
  && chown -R ejabberd:ejabberd /home/ejabberd
 
 # Install required dependencies
 RUN apk upgrade --update musl \
- && apk add bash libstdc++ ncurses-libs openssl expat yaml zlib sqlite curl ca-certificates \
+ && apk add \
+    bash \
+    ca-certificates \
+    curl \
+    expat \
+    libstdc++ \
+    ncurses-libs \
+    openssl \
+    sqlite \
+    uthash \
+    yaml \
+    zlib \
  && rm -rf /var/cache/apk/* \
  && update-ca-certificates
 
 # Install ejabberd
-ADD $ARCHIVE $HOME
-COPY ejabberd-api $HOME/bin/
-COPY ejabberdctl $HOME/bin/
-COPY config/* $HOME/config/
-RUN chown ejabberd:ejabberd $HOME/config/*
+ADD ejabberd-$VERSION.tar.gz $HOME
+COPY ejabberd-api ejabberdctl $HOME/bin/
+COPY --chown=ejabberd:ejabberd config/* $HOME/config/
 COPY docker-entrypoint.sh /
 
 # Setup runtime environment
