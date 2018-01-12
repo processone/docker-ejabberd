@@ -10,13 +10,14 @@ You can build ejabberd from source with all dependencies, with the following com
 
 ```bash
 git clone https://github.com/processone/ejabberd.git
+cd ejabberd
 docker run --rm -v $(pwd):$(pwd) -w $(pwd) ejabberd/mix do deps.get, deps.compile, compile
 ```
 
 Alternatively if you do not have Git installed, you can do:
 ```bash
 wget https://github.com/processone/ejabberd/archive/master.zip
-unzip ejabberd-master
+unzip master.zip
 cd ejabberd-master
 docker run --rm -v $(pwd):$(pwd) -w $(pwd) ejabberd/mix do deps.get, deps.compile, compile
 ```

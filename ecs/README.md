@@ -1,4 +1,4 @@
-## ejabberd Community Edition - Base
+## ejabberd Community Server - Base
 
 This ejabberd Docker image allows you to run a single node ejabberd instance in a Docker container.
 
@@ -28,20 +28,26 @@ docker restart ejabberd
 
 ### Creating admin user
 
-When the container is running (and thus ejabberd), you can exec commands inside the container. The ejabberd-api command-line tool can be used to exercise the API directly from the container, even if the API is not exposed to the outside world.
+When the container is running (and thus ejabberd), you can exec commands inside the container. The api command-line tool can be used to exercise the API directly from the container, even if the API is not exposed to the outside world. Note: ejabberd configuration must allow api calls from loopback interface.
 
 To create an admin user (or any other user), you can use the following command:
 
 ```bash
-docker exec -it ejabberd /home/ejabberd/bin/ejabberd-api register --endpoint=http://127.0.0.1:5280/ --jid=admin@localhost --password=passw0rd
+docker exec -it ejabberd bin/ejabberdapi register --endpoint=http://127.0.0.1:5280/ --jid=admin@localhost --password=passw0rd
+```
+
+It's also possible to fallback to ejabberdctl commands:
+
+```bash
+docker exec -it ejabberd bin/ejabberdctl register admin localhost passw0rd
 ```
 
 ### Running ejabberd with Erlang console attached
 
-If you would like to run it with console attached you can use the `console` command:
+If you would like to run it with Erlang console attached you can use the `live` command:
 
 ```bash
-docker run -it -p 5222:5222 ejabberd/ecs console
+docker run -it -p 5222:5222 ejabberd/ecs live
 ```
 
 This command will use default configuration file and XMPP domain "localhost".
@@ -51,16 +57,32 @@ This command will use default configuration file and XMPP domain "localhost".
 The following command will pass config file using Docker volume feature and share local directory to store database:
 
 ```bash
-mkdir db
-docker run -d --name ejabberd -v $(pwd)/ejabberd.yml:/home/ejabberd/cfg/ejabberd.yml -v $(pwd)/db:/home/ejabberd/db -p 5222:5222 ejabberd/ecs
+mkdir database
+docker run -d --name ejabberd -v $(pwd)/ejabberd.yml:/home/ejabberd/conf/ejabberd.yml -v $(pwd)/database:/home/ejabberd/database -p 5222:5222 ejabberd/ecs
 ```
 
-### Checking ejabberd log file
+### Checking ejabberd log files
 
-You can execute a Docker command to check the content of the log file from inside to container, even if you do not put it on a shared persistent drive:
+You can execute a Docker command to check the content of the log files from inside to container, even if you do not put it on a shared persistent drive:
 
 ```bash
-docker exec -it ejabberd /usr/bin/tail -f /home/ejabberd/log/ejabberd.log
+docker exec -it ejabberd tail -f logs/ejabberd.log
+```
+
+### Open ejabberd debug console
+
+You can open a live debug Erlang console attached to a running container:
+
+```bash
+docker exec -it ejabberd bin/ejabberdctl debug
+```
+
+### Execute ejabberdctl command
+
+You can run anu ejabberdctl command inside running container. Example:
+
+```bash
+docker exec -it ejabberd bin/ejabberdctl status
 ```
 
 ## Docker image advanced configuration
@@ -80,9 +102,9 @@ This is the kind of data you probably want to store on a persistent or local dri
 
 Here are the volume you may want to map:
 
-- /home/ejabberd/log/: Directory containing log files
-- /home/ejabberd/db/: Directory containing Mnesia database. You should backup or export the content of the directory to persistent storage (host storage, local storage, any storage plugin)
-- /home/ejabberd/config/: Directory containing configuration and certificates
+- /home/ejabberd/logs/: Directory containing log files
+- /home/ejabberd/database/: Directory containing Mnesia database. You should backup or export the content of the directory to persistent storage (host storage, local storage, any storage plugin)
+- /home/ejabberd/conf/: Directory containing configuration and certificates
 
 ## Generating ejabberd release
 
@@ -94,16 +116,22 @@ The configuration of ejabberd Erlang/OTP release is customized with:
 
 - rel/config.exs: Customize ejabberd release
 - rel/dev.exs: ejabberd environment configuration for development release
-- rel/docker.exs: ejabberd environment configuration for production Docker release
-- config/ejabberd.yml: ejabberd default config file 
+- rel/prod.exs: ejabberd environment configuration for production Docker release
+- vars.config: ejabberd compilation configuration options
+- conf/ejabberd.yml: ejabberd default config file
 
-Run the build script to generate ejabberd Community Server base image from ejabberd master on Github:
+Build ejabberd Community Server base image from ejabberd master on Github:
 
 ```bash
-./build.sh
+docker build -t ejabberd/ecs .
+```
+
+Build ejabberd Community Server base image for a given ejabberd version:
+
+```bash
+docker build --build-arg VERSION=18.01 -t ejabberd/ecs:18.01 .
 ```
 
 ### TODO
 
-- Embed command-line tool for ejabberd API to be able to create admin user for ejabberd.
-- Rebuild last version of ejabberd-api tool when creating container.
+- Rebuild last version of bin/ejabberdapi tool when creating container.

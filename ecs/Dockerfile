@@ -1,3 +1,32 @@
+FROM ejabberd/mix as builder
+ARG VERSION
+ENV VERSION=${VERSION:-latest} \
+    MIX_ENV=prod
+LABEL maintainer="ProcessOne <contact@process-one.net>" \
+      product="Ejabberd Community Server builder"
+
+# Get ejabberd sources, dependencies, configuration
+RUN git clone https://github.com/processone/ejabberd.git
+WORKDIR /ejabberd
+COPY vars.config .
+COPY rel/*exs rel/
+RUN git checkout ${VERSION/latest/HEAD} \
+ && mix deps.get
+
+# Compile
+RUN mix do compile, release.init, release --env=prod
+
+# Prepare runtime environment
+RUN mkdir runtime \
+ && tar -C runtime -zxf _build/prod/rel/ejabberd/releases/*/ejabberd.tar.gz \
+ && cd runtime \
+ && cp releases/*/start.boot bin \
+ && echo 'beam_lib:strip_files(filelib:wildcard("lib/*/ebin/*beam")), init:stop().' | erts*/bin/erl -boot start_clean >/dev/null \
+ && mv erts*/bin/* bin \
+ && rm -rf releases erts* bin/*src bin/dialyzer bin/typer \
+ && rm bin/ejabberd bin/ejabberd.bat bin/ejabberd_loader.sh
+
+# Runtime container
 FROM alpine:3.7
 ARG VERSION
 ENV TERM=xterm \
@@ -14,37 +43,32 @@ LABEL maintainer="ProcessOne <contact@process-one.net>" \
 # Create directory structure and user for ejabberd
 RUN addgroup ejabberd -g 9000 \
  && adduser -s /bin/sh -D -G ejabberd ejabberd -u 9000 \
- && mkdir -p /home/ejabberd/config /home/ejabberd/db /home/ejabberd/log \
+ && mkdir -p /home/ejabberd/conf /home/ejabberd/database /home/ejabberd/logs \
  && chown -R ejabberd:ejabberd /home/ejabberd
 
 # Install required dependencies
 RUN apk upgrade --update musl \
  && apk add \
-    bash \
-    ca-certificates \
-    curl \
     expat \
     libstdc++ \
     ncurses-libs \
     openssl \
     sqlite \
-    uthash \
     yaml \
     zlib \
- && rm -rf /var/cache/apk/* \
- && update-ca-certificates
+ && rm -rf /var/cache/apk/*
 
 # Install ejabberd
-ADD ejabberd-$VERSION.tar.gz $HOME
-COPY ejabberd-api ejabberdctl $HOME/bin/
-COPY --chown=ejabberd:ejabberd config/* $HOME/config/
-COPY docker-entrypoint.sh /
+WORKDIR $HOME
+COPY --from=builder /ejabberd/runtime .
+COPY bin/* bin/
+COPY --chown=ejabberd:ejabberd conf conf/
+ADD --chown=ejabberd:ejabberd https://curl.haxx.se/ca/cacert.pem conf/cacert.pem
 
 # Setup runtime environment
 USER ejabberd
-WORKDIR $HOME
-VOLUME ["$HOME/db","$HOME/config","$HOME/log"]
+VOLUME ["$HOME/database","$HOME/conf","$HOME/logs"]
 EXPOSE 5222 5269 5280
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["ejabberd"]
+ENTRYPOINT ["/home/ejabberd/bin/ejabberdctl"]
+CMD ["foreground"]

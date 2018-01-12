@@ -23,7 +23,7 @@ end
 environment :prod do
   set include_erts: true
   set include_src: false
-  set config: "rel/docker.exs"
+  set config: "rel/prod.exs"
   set cookie: :"HmewW_sUao={>LXTD8,g;xBu`.i]tq7Dz.m2?ZqO<g1Iz}?L(36T%w,Zz,)gHp$^"
 end
 
