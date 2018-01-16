@@ -50,7 +50,11 @@ RUN addgroup ejabberd -g 9000 \
 RUN apk upgrade --update musl \
  && apk add \
     expat \
+    gd \
+    jpeg \
+    libpng \
     libstdc++ \
+    libwebp \
     ncurses-libs \
     openssl \
     sqlite \
