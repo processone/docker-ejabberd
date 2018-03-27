@@ -134,7 +134,7 @@ docker build -t ejabberd/ecs .
 Build ejabberd Community Server base image for a given ejabberd version:
 
 ```bash
-docker build --build-arg VERSION=18.01 -t ejabberd/ecs:18.01 .
+./build.sh 18.03
 ```
 
 ### TODO
