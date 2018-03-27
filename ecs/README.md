@@ -106,6 +106,11 @@ Here are the volume you may want to map:
 - /home/ejabberd/database/: Directory containing Mnesia database. You should backup or export the content of the directory to persistent storage (host storage, local storage, any storage plugin)
 - /home/ejabberd/conf/: Directory containing configuration and certificates
 
+All these files are owned by ejabberd user inside the container. Corresponding
+UID:GID is 9000:9000. If you prefer bind mounts instead of docker volumes, then
+you need to map this to valid UID:GID on your host to get read/write access on
+mounted directories.
+
 ## Generating ejabberd release
 
 ### Configuration
