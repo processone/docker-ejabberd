@@ -177,6 +177,7 @@ listen:
     module: ejabberd_http
     request_handlers:
       "/ws": ejabberd_http_ws
+      "/bosh": mod_bosh
       "/oauth": ejabberd_oauth
       "/api": mod_http_api
     ##  "/pub/archive": mod_http_fileserver
@@ -240,9 +241,9 @@ listen:
   ##   request_handlers:
   ##     "": mod_http_upload
   ##   tls: true
-  ##   protocol_options: 'TLSOPTS'
-  ##   dhfile: 'DHFILE'
-  ##   ciphers: 'CIPHERS'
+  ##   protocol_options: 'TLS_OPTIONS'
+  ##   dhfile: 'DH_FILE'
+  ##   ciphers: 'TLS_CIPHERS'
 
 ## Disabling digest-md5 SASL authentication. digest-md5 requires plain-text
 ## password storage (see auth_password_format option).
@@ -427,6 +428,11 @@ auth_method: internal
 ## database alive. Specify in seconds: for example 28800 means 8 hours
 ##
 ## sql_keepalive_interval: undefined
+
+##
+## Use the new SQL schema
+##
+## new_sql_schema: true
 
 ###.  ===============
 ###'  TRAFFIC SHAPERS
@@ -720,7 +726,7 @@ modules:
   ## mod_http_upload:
   ##   # docroot: "@HOME@/upload"
   ##   put_url: "https://@HOST@:5444"
-  ##   thumbnail: false # otherwise needs the identify command from ImageMagick installed
+  ##   thumbnail: false # otherwise needs ejabberd to be compiled with libgd support
   ## mod_http_upload_quota:
   ##   max_days: 30
   mod_last: {}
@@ -759,6 +765,14 @@ modules:
     plugins:
       - "flat"
       - "pep" # pep requires mod_caps
+    force_node_config:
+      ## Avoid using OMEMO by default because it
+      ## introduces a lot of hard-to-track problems
+      "eu.siacs.conversations.axolotl.*":
+        access_model: whitelist
+      ## Avoid buggy clients to make their bookmarks public
+      "storage:bookmarks":
+        access_model: whitelist
   mod_push: {}
   mod_push_keepalive: {}
   mod_register:
@@ -801,10 +815,7 @@ modules:
   mod_vcard:
     search: false
   mod_vcard_xupdate: {}
-  ## Convert all avatars posted by Android clients from WebP to JPEG
-  ## mod_avatar:  # this module needs compile option --enable-graphics
-  ##   convert:
-  ##     webp: jpeg
+  mod_avatar: {}
   mod_version: {}
   mod_stream_mgmt: {}
   ##   Non-SASL Authentication (XEP-0078) is now disabled by default
@@ -818,6 +829,7 @@ modules:
   ##   and check your accessibility at https://check.messaging.one/
   mod_s2s_dialback: {}
   mod_http_api: {}
+  mod_fail2ban: {}
 
 ##
 ## Enable modules with custom options in a specific virtual host
