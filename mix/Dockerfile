@@ -8,7 +8,7 @@ RUN apk upgrade --update musl \
             gd-dev jpeg-dev libpng-dev libwebp-dev \
             elixir erlang-crypto erlang-eunit erlang-mnesia erlang-erts erlang-hipe \
             erlang-tools erlang-os-mon erlang-syntax-tools erlang-parsetools \
-            erlang-runtime-tools erlang-reltool file \
+            erlang-runtime-tools erlang-reltool file curl \
  && rm -rf /var/cache/apk/*
 
 # Setup runtime environment
