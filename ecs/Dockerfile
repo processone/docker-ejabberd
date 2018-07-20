@@ -27,7 +27,7 @@ RUN mkdir runtime \
  && rm bin/ejabberd bin/ejabberd.bat bin/ejabberd_loader.sh
 
 # Runtime container
-FROM alpine:3.7
+FROM alpine:3.8
 ARG VERSION
 ENV TERM=xterm \
     LC_ALL=C.UTF-8 \
