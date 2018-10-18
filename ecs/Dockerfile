@@ -58,6 +58,7 @@ RUN apk upgrade --update musl \
     ncurses-libs \
     openssl \
     sqlite \
+    unixodbc \
     yaml \
     zlib \
  && rm -rf /var/cache/apk/*
@@ -67,7 +68,7 @@ WORKDIR $HOME
 COPY --from=builder /ejabberd/runtime .
 COPY bin/* bin/
 COPY --chown=ejabberd:ejabberd conf conf/
-ADD --chown=ejabberd:ejabberd https://curl.haxx.se/ca/cacert.pem conf/cacert.pem
+ADD --chown=ejabberd:ejabberd https://download.process-one.net/cacert.pem conf/cacert.pem
 
 # Setup runtime environment
 USER ejabberd
