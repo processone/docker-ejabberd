@@ -97,7 +97,7 @@ ejabberd base Docker image exposes the following port:
 
 ### Volumes
 
-ejabberd produces two type of data: log files and database (Mnesia).
+ejabberd produces two types of data: log files and database (Mnesia).
 This is the kind of data you probably want to store on a persistent or local drive (at least the database).
 
 Here are the volume you may want to map:
