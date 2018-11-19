@@ -79,7 +79,7 @@ docker exec -it ejabberd bin/ejabberdctl debug
 
 ### Execute ejabberdctl command
 
-You can run anu ejabberdctl command inside running container. Example:
+You can run any ejabberdctl command inside running container. Example:
 
 ```bash
 docker exec -it ejabberd bin/ejabberdctl status
