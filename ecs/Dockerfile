@@ -71,7 +71,7 @@ RUN chmod 755 bin/ejabberdctl bin/ejabberdapi bin/erl
 COPY --chown=ejabberd:ejabberd conf conf/
 ADD --chown=ejabberd:ejabberd https://download.process-one.net/cacert.pem conf/cacert.pem
 
-# Setup runtime environment
+# Set up runtime environment
 USER ejabberd
 VOLUME ["$HOME/database","$HOME/conf","$HOME/logs"]
 EXPOSE 5222 5269 5443

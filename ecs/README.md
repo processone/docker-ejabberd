@@ -79,7 +79,7 @@ docker exec -it ejabberd bin/ejabberdctl debug
 
 ### Execute ejabberdctl command
 
-You can run anu ejabberdctl command inside running container. Example:
+You can run any ejabberdctl command inside running container. Example:
 
 ```bash
 docker exec -it ejabberd bin/ejabberdctl status
@@ -97,13 +97,13 @@ ejabberd base Docker image exposes the following port:
 
 ### Volumes
 
-ejabberd produces two type of data: log files and database (Mnesia).
+ejabberd produces two types of data: log files and database (Mnesia).
 This is the kind of data you probably want to store on a persistent or local drive (at least the database).
 
 Here are the volume you may want to map:
 
 - /home/ejabberd/logs/: Directory containing log files
-- /home/ejabberd/database/: Directory containing Mnesia database. You should backup or export the content of the directory to persistent storage (host storage, local storage, any storage plugin)
+- /home/ejabberd/database/: Directory containing Mnesia database. You should back up or export the content of the directory to persistent storage (host storage, local storage, any storage plugin)
 - /home/ejabberd/conf/: Directory containing configuration and certificates
 
 All these files are owned by ejabberd user inside the container. Corresponding
