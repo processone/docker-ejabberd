@@ -24,10 +24,10 @@ RUN mkdir runtime \
  && echo 'beam_lib:strip_files(filelib:wildcard("lib/*/ebin/*beam")), init:stop().' | erts*/bin/erl -boot start_clean >/dev/null \
  && mv erts*/bin/* bin \
  && rm -rf releases erts* bin/*src bin/dialyzer bin/typer \
- && rm bin/ejabberd bin/ejabberd.bat bin/ejabberd_loader.sh
+ && rm bin/ejabberd bin/ejabberd.bat
 
 # Runtime container
-FROM alpine:3.8
+FROM alpine:edge
 ARG VERSION
 ENV TERM=xterm \
     LC_ALL=C.UTF-8 \
@@ -71,7 +71,7 @@ RUN chmod 755 bin/ejabberdctl bin/ejabberdapi bin/erl
 COPY --chown=ejabberd:ejabberd conf conf/
 ADD --chown=ejabberd:ejabberd https://download.process-one.net/cacert.pem conf/cacert.pem
 
-# Set up runtime environment
+# Setup runtime environment
 USER ejabberd
 VOLUME ["$HOME/database","$HOME/conf","$HOME/logs"]
 EXPOSE 5222 5269 5280 5443
