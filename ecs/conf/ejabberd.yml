@@ -60,7 +60,6 @@ define_macro:
 c2s_ciphers: CIPHERS_INTERMEDIATE
 c2s_protocol_options: PROTOCOL_OPTIONS_INTERMEDIATE
 
-
 listen:
   -
     port: 5222
@@ -95,6 +94,11 @@ listen:
     ip: "::"
     module: ejabberd_http
     web_admin: true
+  -
+    port: 1883
+    ip: "::"
+    module: mod_mqtt
+    backlog: 1000
 
 s2s_use_starttls: optional
 
@@ -199,6 +203,7 @@ modules:
     ## db_type: sql
     ## assume_mam_usage: true
     ## default: always
+  mod_mqtt: {}
   mod_muc:
     access:
       - allow
