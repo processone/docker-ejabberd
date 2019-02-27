@@ -24,9 +24,11 @@ docker run --rm -v $(pwd):$(pwd) -w $(pwd) ejabberd/mix do deps.get, deps.compil
 
 ## Run ejabberd with mix command-line tool attached
 
-You can customize the configuration by editing the file `config/ejabberd.yml`. As a default, you can run ejabberd with console attached on "localhost" domain:
+You need to copy default configuration, and can edit it to customize your setup.
+As a default, you can run ejabberd with console attached on "localhost" domain:
 
 ```bash
+cp ejabberd.yml.example config/ejabberd.yml
 docker run --rm -it -p 5222:5222 -p 5280:5280 -v $(pwd):$(pwd) -w $(pwd) --entrypoint="/usr/bin/iex" ejabberd/mix -S mix
 ```
 
