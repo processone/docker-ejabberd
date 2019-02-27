@@ -72,6 +72,11 @@ done
 : "${EJABBERD_LOG_PATH:="$LOGS_DIR/ejabberd.log"}"
 : "${SPOOL_DIR:="$HOME_DIR/database/$ERLANG_NODE"}"
 
+[ -n "$ERLANG_COOKIE" ] && {
+    echo "$ERLANG_COOKIE" > "$HOME"/.erlang.cookie
+    chmod 400 "$HOME"/.erlang.cookie
+}
+
 # define erl parameters
 ERLANG_OPTS="+K $POLL -smp $SMP +P $ERL_PROCESSES $ERL_OPTIONS"
 if [ -n "$FIREWALL_WINDOW" ] ; then
@@ -108,17 +113,6 @@ export ERL_MAX_ETS_TABLES
 export CONTRIB_MODULES_PATH
 export CONTRIB_MODULES_CONF_DIR
 export ERL_LIBS
-
-# export dynamic library path
-case $(uname -m) in
-    i[3456]86) cpu="x86" ;;
-    i86pc) cpu="x86" ;;
-    armv7*) cpu="armhf" ;;
-    *) cpu=$(uname -m | tr A-Z a-z) ;;
-esac
-os=$(uname -s | tr A-Z a-z)
-export LD_FALLBACK_LIBRARY_PATH="$ROOT_DIR"/lib/${os}-${cpu}
-export DYLD_FALLBACK_LIBRARY_PATH="$LD_FALLBACK_LIBRARY_PATH"
 
 # run command either directly or via su $INSTALLUSER
 exec_cmd()
