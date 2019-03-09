@@ -57,7 +57,7 @@ RUN apk upgrade --update musl \
     libwebp \
     ncurses-libs \
     openssl \
-    sqlite \
+    sqlite-libs \
     unixodbc \
     yaml \
     zlib \
@@ -70,6 +70,8 @@ COPY bin/* bin/
 RUN chmod 755 bin/ejabberdctl bin/ejabberdapi bin/erl
 COPY --chown=ejabberd:ejabberd conf conf/
 ADD --chown=ejabberd:ejabberd https://download.process-one.net/cacert.pem conf/cacert.pem
+RUN mkdir lib/ejabberd-19.2.0/priv/sql
+ADD --chown=ejabberd:ejabberd https://raw.githubusercontent.com/processone/ejabberd/master/sql/lite.sql lib/ejabberd-19.2.0/priv/sql
 
 # Setup runtime environment
 USER ejabberd
