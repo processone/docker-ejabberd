@@ -28,11 +28,13 @@ notifications:
 
 matrix:
   allow_failures:
-    - env: VERSION=develop VARIANT=mix
-    - env: VERSION=develop VARIANT=mix
+    - env: VERSION=latest VARIANT=ecs
+    - env: VERSION=latest VARIANT=mix
 
 env: # Environments
-  - VERSION=19.5 VARIANT=ecs
-  - VERSION=19.5 VARIANT=mix
-  - VERSION=19.2 VARIANT=ecs
-  - VERSION=19.2 VARIANT=mix
+  - VERSION=latest VARIANT=ecs
+  - VERSION=latest VARIANT=mix
+  - VERSION=19.05 VARIANT=ecs
+  - VERSION=19.05 VARIANT=mix
+  - VERSION=19.02 VARIANT=ecs
+  - VERSION=19.02 VARIANT=mix
