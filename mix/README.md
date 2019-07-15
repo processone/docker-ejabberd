@@ -1,3 +1,10 @@
+
+[![Docker Stars](https://img.shields.io/docker/stars/ejabberd/mix.svg)](https://hub.docker.com/r/ejabberd/mix/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/ejabberd/mix.svg)](https://hub.docker.com/r/ejabberd/mix/)
+[![](https://images.microbadger.com/badges/version/ejabberd/mix.svg)](https://microbadger.com/images/ejabberd/mix)
+[![](https://images.microbadger.com/badges/image/ejabberd/mix.svg)](https://microbadger.com/images/ejabberd/mix)
+[![GitHub stars](https://img.shields.io/github/stars/processone/docker-ejabberd.svg?style=social)](https://github.com/processone/docker-ejabberd)
+
 ## Docker image for ejabberd developers
 
 Thanks to this image, you can build ejabberd with dependencies provided in Docker image, without the need to install build software (beside Docker) directly on your own machine.

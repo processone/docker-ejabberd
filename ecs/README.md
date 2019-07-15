@@ -1,3 +1,10 @@
+
+[![Docker Stars](https://img.shields.io/docker/stars/ejabberd/ecs.svg)](https://hub.docker.com/r/ejabberd/ecs/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/ejabberd/ecs.svg)](https://hub.docker.com/r/ejabberd/ecs/)
+[![](https://images.microbadger.com/badges/version/ejabberd/ecs.svg)](https://microbadger.com/images/ejabberd/ecs)
+[![](https://images.microbadger.com/badges/image/ejabberd/ecs.svg)](https://microbadger.com/images/ejabberd/ecs)
+[![GitHub stars](https://img.shields.io/github/stars/processone/docker-ejabberd.svg?style=social)](https://github.com/processone/docker-ejabberd)
+
 ## ejabberd Community Server - Base
 
 This ejabberd Docker image allows you to run a single node ejabberd instance in a Docker container.
