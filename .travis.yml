@@ -19,7 +19,7 @@ script:
   - travis_wait docker build --build-arg VERSION=${VERSION} -t ejabberd/ecs:travis-${VERSION} .
   - docker images
   - travis_retry docker run --name ejabberd -d -p 5222:5222 ejabberd/ecs && sleep 60
-  - docke ps
+  - docker ps
   - docker logs ejabberd
   - docker logs ejabberd | grep "Start accepting TCP connections" || exit 1
 
