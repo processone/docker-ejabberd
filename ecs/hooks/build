@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# See documentation for details:
+# https://docs.docker.com/docker-hub/builds/advanced/
+
+# Use $VERSION build environment variable or the Docker repository tag being built
+version=${VERSION:-${DOCKER_TAG}}
+
+docker build --build-arg VERSION=$version -f $DOCKERFILE_PATH -t $IMAGE_NAME .
