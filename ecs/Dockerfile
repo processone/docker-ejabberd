@@ -58,6 +58,7 @@ RUN apk upgrade --update musl \
     ncurses-libs \
     openssl \
     sqlite \
+    sqlite-libs \
     unixodbc \
     yaml \
     zlib \
