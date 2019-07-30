@@ -8,6 +8,8 @@
 - Fix INET_DIST_INTERFACE
 - Add travis support
 - Add STUN/TURN & SIP support
+- Add libgd for image manupilation
+- Upgrade alpine to 3.10
 
 # Version 19.05
 
