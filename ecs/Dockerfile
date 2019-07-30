@@ -43,7 +43,7 @@ LABEL maintainer="ProcessOne <contact@process-one.net>" \
 # Create directory structure and user for ejabberd
 RUN addgroup ejabberd -g 9000 \
  && adduser -s /bin/sh -D -G ejabberd ejabberd -u 9000 \
- && mkdir -p /home/ejabberd/conf /home/ejabberd/database /home/ejabberd/logs \
+ && mkdir -p /home/ejabberd/conf /home/ejabberd/database /home/ejabberd/logs /home/ejabberd/upload \
  && chown -R ejabberd:ejabberd /home/ejabberd
 
 # Install required dependencies
@@ -74,7 +74,7 @@ ADD --chown=ejabberd:ejabberd https://download.process-one.net/cacert.pem conf/c
 
 # Setup runtime environment
 USER ejabberd
-VOLUME ["$HOME/database","$HOME/conf","$HOME/logs"]
+VOLUME ["$HOME/database","$HOME/conf","$HOME/logs","$HOME/upload"]
 EXPOSE 1883 4369-4399 5222 5269 5280 5443
 
 ENTRYPOINT ["/home/ejabberd/bin/ejabberdctl"]
