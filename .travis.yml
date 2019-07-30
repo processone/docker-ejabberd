@@ -1,0 +1,39 @@
+dist: trusty
+sudo: required
+
+services: docker
+
+language: bash
+
+branches:
+  only:
+    - master
+
+before_script:
+  - env | sort
+  - dir="${VARIANT}/"
+
+script:
+  - cd "$dir"
+  - travis_wait docker build --build-arg VERSION=${VERSION} -t ejabberd/ecs:travis-${VERSION} .
+  - docker images
+  - travis_retry docker run --name ejabberd -d -p 5222:5222 ejabberd/ecs && sleep 60
+  - docker ps
+  - docker logs ejabberd
+  - docker logs ejabberd | grep "Start accepting TCP connections" || exit 1
+
+notifications:
+  email: false
+
+matrix:
+  allow_failures:
+    - env: VERSION=latest VARIANT=ecs
+    - env: VERSION=latest VARIANT=mix
+
+env: # Environments
+  - VERSION=latest VARIANT=ecs
+  - VERSION=latest VARIANT=mix
+  - VERSION=19.05 VARIANT=ecs
+  - VERSION=19.05 VARIANT=mix
+  - VERSION=19.02 VARIANT=ecs
+  - VERSION=19.02 VARIANT=mix

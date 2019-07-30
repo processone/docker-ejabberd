@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.org/processone/docker-ejabberd.svg)](https://travis-ci.org/processone/docker-ejabberd)
+
 # docker-ejabberd
 
 This repository contains a set of Docker images for ejabberd.
