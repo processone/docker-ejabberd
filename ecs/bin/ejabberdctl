@@ -222,6 +222,7 @@ stop_epmd()
 
 # make sure node not already running and node name unregistered
 # if all ok, ensure runtime directory exists and make it current directory
+# then (docker case) make .sql files available on database volume
 check_start()
 {
     "$EPMD" -names 2>/dev/null | grep -q " ${ERLANG_NODE%@*} " && {
@@ -237,6 +238,7 @@ check_start()
         }
         "$EPMD" -kill >/dev/null
     }
+    cp "$HOME_DIR/lib/ejabberd-*/priv/sql/*" "$HOME_DIR/database/"
 }
 
 # allow sync calls

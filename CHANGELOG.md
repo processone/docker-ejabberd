@@ -10,6 +10,7 @@
 - Add STUN/TURN & SIP support
 - Add libgd for image manupilation
 - Upgrade alpine to 3.10
+- Keep SQL init scripts in database volume
 
 # Version 19.05
 

@@ -24,7 +24,8 @@ RUN mkdir runtime \
  && echo 'beam_lib:strip_files(filelib:wildcard("lib/*/ebin/*beam")), init:stop().' | erts*/bin/erl -boot start_clean >/dev/null \
  && mv erts*/bin/* bin \
  && rm -rf releases erts* bin/*src bin/dialyzer bin/typer \
- && rm bin/ejabberd bin/ejabberd.bat
+ && rm bin/ejabberd bin/ejabberd.bat \
+ && cp -r /ejabberd/sql lib/ejabberd-*/priv
 
 # Runtime container
 FROM alpine:3.10
