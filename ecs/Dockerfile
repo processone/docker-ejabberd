@@ -27,7 +27,7 @@ RUN mkdir runtime \
  && rm bin/ejabberd bin/ejabberd.bat
 
 # Runtime container
-FROM alpine:3.9
+FROM alpine:3.10
 ARG VERSION
 ARG VCS_REF
 ARG BUILD_DATE
