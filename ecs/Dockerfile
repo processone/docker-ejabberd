@@ -63,6 +63,7 @@ RUN apk upgrade --update musl \
     expat \
     gd \
     jpeg \
+    libgd \
     libpng \
     libstdc++ \
     libwebp \
