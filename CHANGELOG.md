@@ -9,6 +9,7 @@
 - Add travis support
 - Add STUN/TURN & SIP support
 - Add libgd for image manupilation
+- Add Dockerhub build hook
 - Upgrade alpine to 3.10
 - Keep SQL init scripts in database volume
 
