@@ -1,4 +1,4 @@
-# Version 19.07
+# Version 19.08
 
 - Update default configuration
 - Add sqlite libs
