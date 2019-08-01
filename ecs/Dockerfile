@@ -11,7 +11,8 @@ WORKDIR /ejabberd
 COPY vars.config .
 COPY rel/*exs rel/
 RUN git checkout ${VERSION/latest/HEAD} \
- && mix deps.get
+ && mix deps.get \
+ && (cd deps/eimp; ./configure)
 
 # Compile
 RUN mix do compile, release.init, release --env=prod
