@@ -11,6 +11,7 @@
 - Add libgd for image manupilation
 - Add Dockerhub build hook
 - Keep SQL init scripts in database volume
+- Update use of new distillery
 
 # Version 19.05
 

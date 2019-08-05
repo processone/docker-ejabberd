@@ -15,7 +15,7 @@ RUN git checkout ${VERSION/latest/HEAD} \
  && (cd deps/eimp; ./configure)
 
 # Compile
-RUN mix do compile, release.init, release --env=prod
+RUN mix do compile, distillery.init, distillery.release --env=prod
 
 # Prepare runtime environment
 RUN mkdir runtime \
