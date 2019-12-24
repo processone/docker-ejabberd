@@ -29,7 +29,7 @@ RUN mkdir runtime \
  && cp -r /ejabberd/sql lib/ejabberd-*/priv
 
 # Runtime container
-FROM alpine:3.9
+FROM alpine:3.11
 ARG VERSION
 ARG VCS_REF
 ARG BUILD_DATE
@@ -63,6 +63,7 @@ RUN addgroup ejabberd -g 9000 \
 RUN apk upgrade --update musl \
  && apk add \
     expat \
+    freetds \
     gd \
     jpeg \
     libgd \
@@ -76,6 +77,7 @@ RUN apk upgrade --update musl \
     unixodbc \
     yaml \
     zlib \
+ && ln -fs /usr/lib/libtdsodbc.so.0 /usr/lib/libtdsodbc.so \
  && rm -rf /var/cache/apk/*
 
 # Install ejabberd
