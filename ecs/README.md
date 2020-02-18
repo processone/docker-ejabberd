@@ -68,6 +68,14 @@ mkdir database
 docker run -d --name ejabberd -v $(pwd)/ejabberd.yml:/home/ejabberd/conf/ejabberd.yml -v $(pwd)/database:/home/ejabberd/database -p 5222:5222 ejabberd/ecs
 ```
 
+### Inspecting the container state
+
+The container is packaging Alpine Linux. You can check the state with the command:
+
+```bash
+docker exec -it ejabberd sh
+```
+
 ### Checking ejabberd log files
 
 You can execute a Docker command to check the content of the log files from inside to container, even if you do not put it on a shared persistent drive:
