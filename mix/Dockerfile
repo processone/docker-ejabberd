@@ -1,6 +1,6 @@
 FROM alpine:3.11
 LABEL maintainer="ProcessOne <contact@process-one.net>" \
-    product="Ejabberd mix development environment"
+      product="Ejabberd mix development environment"
 
 # Install required dependencies
 RUN apk upgrade --update musl \
