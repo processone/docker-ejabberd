@@ -3,7 +3,7 @@ ARG VERSION
 ENV VERSION=${VERSION:-latest} \
     MIX_ENV=prod
 LABEL maintainer="ProcessOne <contact@process-one.net>" \
-      product="Ejabberd Community Server builder"
+    product="Ejabberd Community Server builder"
 
 # Get ejabberd sources, dependencies, configuration
 RUN git clone https://github.com/processone/ejabberd.git
@@ -11,22 +11,22 @@ WORKDIR /ejabberd
 COPY vars.config .
 COPY rel/*exs rel/
 RUN git checkout ${VERSION/latest/HEAD} \
- && mix deps.get \
- && (cd deps/eimp; ./configure)
+    && mix deps.get \
+    && (cd deps/eimp; ./configure)
 
 # Compile
 RUN mix do compile, distillery.init, distillery.release --env=prod
 
 # Prepare runtime environment
 RUN mkdir runtime \
- && tar -C runtime -zxf _build/prod/rel/ejabberd/releases/*/ejabberd.tar.gz \
- && cd runtime \
- && cp releases/*/start.boot bin \
- && echo 'beam_lib:strip_files(filelib:wildcard("lib/*/ebin/*beam")), init:stop().' | erts*/bin/erl -boot start_clean >/dev/null \
- && mv erts*/bin/* bin \
- && rm -rf releases erts* bin/*src bin/dialyzer bin/typer \
- && rm bin/ejabberd bin/ejabberd.bat \
- && cp -r /ejabberd/sql lib/ejabberd-*/priv
+    && tar -C runtime -zxf _build/prod/rel/ejabberd/releases/*/ejabberd.tar.gz \
+    && cd runtime \
+    && cp releases/*/start.boot bin \
+    && echo 'beam_lib:strip_files(filelib:wildcard("lib/*/ebin/*beam")), init:stop().' | erts*/bin/erl -boot start_clean >/dev/null \
+    && mv erts*/bin/* bin \
+    && rm -rf releases erts* bin/*src bin/dialyzer bin/typer \
+    && rm bin/ejabberd bin/ejabberd.bat \
+    && cp -r /ejabberd/sql lib/ejabberd-*/priv
 
 # Runtime container
 FROM alpine:3.11
@@ -41,27 +41,27 @@ ENV TERM=xterm \
     HOME=/home/ejabberd \
     VERSION=${VERSION:-latest}
 LABEL maintainer="ProcessOne <contact@process-one.net>" \
-      product="Ejabberd Community Server Official Docker Image" \
-      version=$VERSION \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url="https://github.com/processone/docker-ejabberd" \
-      org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name="Ejabberd Community Server Official Docker Image" \
-      org.label-schema.description="Robust, Scalable and Extensible Realtime Server using XMPP, MQTT and SIP" \
-      org.label-schema.url="https://www.ejabberd.im/" \
-      org.label-schema.vendor="ProcessOne" \
-      org.label-schema.version=$VERSION \
-      org.label-schema.schema-version="1.0"
+    product="Ejabberd Community Server Official Docker Image" \
+    version=$VERSION \
+    org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.vcs-url="https://github.com/processone/docker-ejabberd" \
+    org.label-schema.build-date=$BUILD_DATE \
+    org.label-schema.name="Ejabberd Community Server Official Docker Image" \
+    org.label-schema.description="Robust, Scalable and Extensible Realtime Server using XMPP, MQTT and SIP" \
+    org.label-schema.url="https://www.ejabberd.im/" \
+    org.label-schema.vendor="ProcessOne" \
+    org.label-schema.version=$VERSION \
+    org.label-schema.schema-version="1.0"
 
 # Create directory structure and user for ejabberd
 RUN addgroup ejabberd -g 9000 \
- && adduser -s /bin/sh -D -G ejabberd ejabberd -u 9000 \
- && mkdir -p /home/ejabberd/conf /home/ejabberd/database /home/ejabberd/logs /home/ejabberd/upload \
- && chown -R ejabberd:ejabberd /home/ejabberd
+    && adduser -s /bin/sh -D -G ejabberd ejabberd -u 9000 \
+    && mkdir -p /home/ejabberd/conf /home/ejabberd/database /home/ejabberd/logs /home/ejabberd/upload \
+    && chown -R ejabberd:ejabberd /home/ejabberd
 
 # Install required dependencies
 RUN apk upgrade --update musl \
- && apk add \
+    && apk add \
     expat \
     freetds \
     gd \
@@ -77,8 +77,8 @@ RUN apk upgrade --update musl \
     unixodbc \
     yaml \
     zlib \
- && ln -fs /usr/lib/libtdsodbc.so.0 /usr/lib/libtdsodbc.so \
- && rm -rf /var/cache/apk/*
+    && ln -fs /usr/lib/libtdsodbc.so.0 /usr/lib/libtdsodbc.so \
+    && rm -rf /var/cache/apk/*
 
 # Install ejabberd
 WORKDIR $HOME
