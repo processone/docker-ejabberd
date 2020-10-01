@@ -131,7 +131,7 @@ mounted directories.
 
 ### Configuration
 
-Image is build by embedding an ejabberd Erlang/OTP standalone release in the image.
+Image is built by embedding an ejabberd Erlang/OTP standalone release in the image.
 
 The configuration of ejabberd Erlang/OTP release is customized with:
 
