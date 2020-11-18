@@ -33,20 +33,58 @@ If needed you can restart the stopped ejabberd container with:
 docker restart ejabberd
 ```
 
-### Creating admin user
+### Registering an admin account
 
-When the container is running (and thus ejabberd), you can exec commands inside the container. The api command-line tool can be used to exercise the API directly from the container, even if the API is not exposed to the outside world. Note: ejabberd configuration must allow api calls from loopback interface.
-
-To create an admin user (or any other user), you can use the following command:
-
-```bash
-docker exec -it ejabberd bin/ejabberdapi register --endpoint=http://127.0.0.1:5280/ --jid=admin@localhost --password=passw0rd
-```
-
-It's also possible to fallback to ejabberdctl commands:
+The default ejabberd configuration has already granted admin privilege
+to an account that would be called `admin@localhost`,
+so you just need to register such an account
+to start using it for administrative purposes.
+You can register this account using the `ejabberdctl` script, for example:
 
 ```bash
 docker exec -it ejabberd bin/ejabberdctl register admin localhost passw0rd
+```
+
+### Using ejabberdapi
+
+When the container is running (and thus ejabberd), you can exec commands inside the container.
+To execute those commands you can use `ejabberdctl` or any other of the available interfaces, see
+https://docs.ejabberd.im/developer/ejabberd-api/#understanding-ejabberd-commands
+
+Additionally, this Docker image includes the `ejabberdapi` executable.
+Please check the [ejabberd-api homepage](https://github.com/processone/ejabberd-api)
+for configuration and usage details.
+
+For example, if you configure ejabberd like this:
+```yaml
+listen:
+  -
+    port: 5282
+    module: ejabberd_http
+    request_handlers:
+      "/api": mod_http_api
+
+acl:
+  loopback:
+    ip:
+      - 127.0.0.0/8
+      - ::1/128
+      - ::FFFF:127.0.0.1/128
+
+api_permissions:
+  "admin access":
+    who:
+      access:
+        allow:
+          acl: loopback
+    what:
+      - "register"
+```
+
+Then you could register new accounts with this query:
+
+```bash
+docker exec -it ejabberd bin/ejabberdapi register --endpoint=http://127.0.0.1:5282/ --jid=admin@localhost --password=passw0rd
 ```
 
 ### Running ejabberd with Erlang console attached
@@ -90,14 +128,6 @@ You can open a live debug Erlang console attached to a running container:
 
 ```bash
 docker exec -it ejabberd bin/ejabberdctl debug
-```
-
-### Execute ejabberdctl command
-
-You can run any ejabberdctl command inside running container. Example:
-
-```bash
-docker exec -it ejabberd bin/ejabberdctl status
 ```
 
 ## Docker image advanced configuration
