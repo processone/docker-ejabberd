@@ -24,8 +24,11 @@ RUN mkdir runtime \
     && cp releases/*/start.boot bin \
     && echo 'beam_lib:strip_files(filelib:wildcard("lib/*/ebin/*beam")), init:stop().' | erts*/bin/erl -boot start_clean >/dev/null \
     && mv erts*/bin/* bin \
+    && EJABBERD_VERSION=`(cd releases; ls -1 -d *.*.*)` \
     && rm -rf releases erts* bin/*src bin/dialyzer bin/typer \
     && rm bin/ejabberd bin/ejabberd.bat \
+    && mkdir lib/ejabberd-$EJABBERD_VERSION/priv/bin \
+    && cp /ejabberd/tools/captcha*sh lib/ejabberd-$EJABBERD_VERSION/priv/bin \
     && cp -r /ejabberd/sql lib/ejabberd-*/priv
 
 # Runtime container

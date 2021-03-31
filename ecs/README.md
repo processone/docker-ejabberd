@@ -130,6 +130,31 @@ You can open a live debug Erlang console attached to a running container:
 docker exec -it ejabberd bin/ejabberdctl debug
 ```
 
+### CAPTCHA
+
+ejabberd includes two example CAPTCHA scripts.
+If you want to use any of them, first install some additional required libraries:
+
+```bash
+docker exec --user root ejabberd apk add imagemagick ghostscript-fonts bash
+```
+
+Now update your ejabberd configuration file, for example:
+```bash
+docker exec -it ejabberd vi conf/ejabberd.yml
+```
+
+and add the required options:
+```
+captcha_cmd: /home/ejabberd/lib/ejabberd-21.1.0/priv/bin/captcha.sh
+captcha_url: https://localhost:5443/captcha
+```
+
+Finally, reload the configuration file or restart the container:
+```bash
+docker exec ejabberd bin/ejabberdctl reload_config
+```
+
 ## Docker image advanced configuration
 
 ### Ports
