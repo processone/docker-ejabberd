@@ -26,8 +26,9 @@
 :: (configuration, database, logs, ...)
 ::
 :: In Windows 10 you can configure the path:
+
 set INSTALL_DIR_WINDOWS10=C:\ejabberd
-::
+
 :: In older Windows, not configurable, it will be installed in:
 :: C:\Users\%USERNAME%\ejabberd
 
@@ -36,23 +37,28 @@ set INSTALL_DIR_WINDOWS10=C:\ejabberd
 :: to form the Jabber Identifier (for example: user@example.net).
 :: This computer must be known on the network with this address name.
 :: You can later add more in conf/ejabberd.yml
+
 set HOST=localhost
 
 :: Please enter the administrator username for the current
 :: ejabberd installation. A Jabber account with this username
 :: will be created and granted administrative privileges.
 :: Don't use blankspaces in the username.
+
 set USER=admin
 
 :: Please provide a password for that new administrator account
+
 set PASSWORD=
 
 :: By default this downloads 'latest' ejabberd version,
 :: but you can set a specific version, for example 21.01
+
 set VERSION=latest
 
 :: This tells docker what ports ejabberd will use.
 :: You can later configure them in conf/ejabberd.yml
+
 set PORTS=5180 5222 5269 5443
 
 ::
