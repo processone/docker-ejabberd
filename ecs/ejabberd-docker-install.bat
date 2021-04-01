@@ -102,6 +102,7 @@ if "%wversion%" == "10.0" (
   set VD=-v %INSTALL_DIR_WINDOWS10%\database:/home/ejabberd/database
   set VL=-v %INSTALL_DIR_WINDOWS10%\logs:/home/ejabberd/logs
   set VM=-v %INSTALL_DIR_WINDOWS10%\ejabberd-modules:/home/ejabberd/.ejabberd-modules
+  set DOCKERDOWNLOAD="First download and install Docker Desktop from https://www.docker.com/"
 ) else (
   echo === Preparing paths to install in Windows older than 10...
   set INSTALL_DIR=C:\Users\%USERNAME%\ejabberd
@@ -109,6 +110,7 @@ if "%wversion%" == "10.0" (
   set VD=-v "/%INSTALL_DIR_DOCKER%/database:/home/ejabberd/database"
   set VL=-v "/%INSTALL_DIR_DOCKER%/logs:/home/ejabberd/logs"
   set VM=-v "/%INSTALL_DIR_DOCKER%/ejabberd-modules:/home/ejabberd/.ejabberd-modules"
+  set DOCKERDOWNLOAD="First download and install Docker Toolbox from https://github.com/docker/toolbox/releases"
 )
 set VOLUMES=%VC% %VD% %VL% %VM%
 
@@ -122,7 +124,7 @@ if %ERRORLEVEL% NEQ 0 (
   echo.
   echo === ERROR: It seems docker is not installed!!!
   echo.
-  echo === Please go to https://www.docker.com/ download Docker Desktop and install it.
+  echo %DOCKERDOWNLOAD%
   echo === Then try to run this script again.
   echo.
   pause
