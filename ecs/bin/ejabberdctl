@@ -115,6 +115,13 @@ export CONTRIB_MODULES_CONF_DIR
 export ERL_LIBS
 
 # run command either directly or via su $INSTALLUSER
+cmd()
+{
+    case $EXEC_CMD in
+        as_install_user) su -s /bin/sh -c '"$0" "$@"' "$INSTALLUSER" -- "$@" ;;
+        as_current_user) "$@" ;;
+    esac
+}
 exec_cmd()
 {
     case $EXEC_CMD in
@@ -263,7 +270,7 @@ wait_status()
 }
 
 # ensure we can change current directory to SPOOL_DIR
-[ -d "$SPOOL_DIR" ] || exec_cmd mkdir -p "$SPOOL_DIR"
+[ -d "$SPOOL_DIR" ] || cmd mkdir -p "$SPOOL_DIR"
 cd "$SPOOL_DIR" || {
     echo "ERROR: can not access directory $SPOOL_DIR"
     exit 6
