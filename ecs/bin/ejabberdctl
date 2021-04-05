@@ -332,7 +332,7 @@ case $1 in
         ;;
     iexdebug)
         debugwarning
-        exec_iex "$(uid debug)" --remsh "$ERLANG_NODE"
+        exec_iex "$(uid debug)" --remsh "$ERLANG_NODE" --boot start_clean
         ;;
     iexlive)
         livewarning
