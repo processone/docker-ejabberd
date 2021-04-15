@@ -64,6 +64,8 @@ done
 : "${LOGS_DIR:="$HOME_DIR/logs"}"
 : "${EJABBERD_CONFIG_PATH:="$ETC_DIR/ejabberd.yml"}"
 : "${EJABBERDCTL_CONFIG_PATH:="$ETC_DIR/ejabberdctl.cfg"}"
+# Allows passing extra Erlang command-line arguments in vm.args file
+: "${VMARGS:="$ETC_DIR/vm.args"}"
 [ -f "$EJABBERDCTL_CONFIG_PATH" ] && . "$EJABBERDCTL_CONFIG_PATH"
 [ -n "$ERLANG_NODE_ARG" ] && ERLANG_NODE="$ERLANG_NODE_ARG"
 [ "$ERLANG_NODE" = "${ERLANG_NODE%.*}" ] && S="-s"
@@ -87,6 +89,8 @@ if [ -n "$INET_DIST_INTERFACE" ] ; then
     fi
 fi
 ERL_LIBS="$ROOT_DIR/lib"
+# if vm.args file exists in config directory, pass it to Erlang VM
+[ -f "$VMARGS" ] && ERLANG_OPTS="$ERLANG_OPTS -args_file $VMARGS"
 ERL_CRASH_DUMP="$LOGS_DIR"/erl_crash_$(date "+%Y%m%d-%H%M%S").dump
 ERL_INETRC="$ETC_DIR"/inetrc
 
