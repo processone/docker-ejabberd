@@ -72,7 +72,7 @@ done
 : "${EJABBERD_LOG_PATH:="$LOGS_DIR/ejabberd.log"}"
 : "${SPOOL_DIR:="$HOME_DIR/database/$ERLANG_NODE"}"
 
-[ -n "$ERLANG_COOKIE" ] && {
+[ -n "$ERLANG_COOKIE" ] && [ ! -f "$HOME"/.erlang.cookie ] && {
     echo "$ERLANG_COOKIE" > "$HOME"/.erlang.cookie
     chmod 400 "$HOME"/.erlang.cookie
 }
