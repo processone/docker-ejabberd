@@ -313,6 +313,10 @@ case $1 in
         post_waiter_fork
         exec_erl "$ERLANG_NODE" $EJABBERD_OPTS -noinput
         ;;
+    foreground-quiet)
+        check_start
+        exec_erl "$ERLANG_NODE" $EJABBERD_OPTS -noinput -ejabberd quiet true
+        ;;
     live)
         livewarning
         check_start
