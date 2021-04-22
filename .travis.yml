@@ -22,11 +22,6 @@ script:
 notifications:
   email: false
 
-jobs:
-  allow_failures:
-    - env: VARIANT=ecs
-    - env: VARIANT=mix
-
 env:
   - VARIANT=ecs
   - VARIANT=mix
