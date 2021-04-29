@@ -1,0 +1,45 @@
+name: Tests
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+      - '**.bat'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - '**.bat'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: true
+      max-parallel: 1
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build ecs image
+        run: |
+            cd ecs
+            ./build.sh
+
+      - name: Run ecs image
+        run: |
+            docker images
+            docker run --name ejabberd -d -p 5222:5222 ejabberd/ecs:latest
+
+      - name: Wait ejabberd started
+        run: |
+            docker exec ejabberd bin/ejabberdctl started
+
+      - name: Check ecs results
+        run: |
+            docker ps -s
+            docker logs ejabberd
+            docker logs ejabberd | grep -q "Start accepting TCP connections" || exit 1
+            docker logs ejabberd | grep -q "error" && exit 1 || exit 0
+            docker logs ejabberd | grep -q "Error" && exit 1 || exit 0
