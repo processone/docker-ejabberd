@@ -1,9 +1,10 @@
 
-[![Docker Stars](https://img.shields.io/docker/stars/ejabberd/mix.svg)](https://hub.docker.com/r/ejabberd/mix/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/ejabberd/mix.svg)](https://hub.docker.com/r/ejabberd/mix/)
-[![](https://images.microbadger.com/badges/version/ejabberd/mix.svg)](https://microbadger.com/images/ejabberd/mix)
-[![](https://images.microbadger.com/badges/image/ejabberd/mix.svg)](https://microbadger.com/images/ejabberd/mix)
-[![GitHub stars](https://img.shields.io/github/stars/processone/docker-ejabberd.svg?style=social)](https://github.com/processone/docker-ejabberd)
+[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/ejabberd/mix)](https://hub.docker.com/r/ejabberd/mix/)
+[![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/ejabberd/mix)](https://hub.docker.com/r/ejabberd/mix/)
+[![Docker Stars](https://img.shields.io/docker/stars/ejabberd/mix)](https://hub.docker.com/r/ejabberd/mix/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/ejabberd/mix)](https://hub.docker.com/r/ejabberd/mix/)
+[![Build Status](https://github.com/processone/docker-ejabberd/actions/workflows/tests.yml/badge.svg)](https://github.com/processone/docker-ejabberd/actions/workflows/tests.yml)
+[![GitHub stars](https://img.shields.io/github/stars/processone/docker-ejabberd?style=social)](https://github.com/processone/docker-ejabberd)
 
 ## Docker image for ejabberd developers
 
