@@ -13,6 +13,9 @@ built using Erlang/OTP, and also includes MQTT Broker and SIP Service.
 
 This Docker image allows you to run a single node ejabberd instance in a Docker container.
 
+If you are using a Windows operating system, check the tutorials mentioned in
+[ejabberd Docs > Docker Image](https://docs.ejabberd.im/admin/installation/#docker-image).
+
 # Start ejabberd
 
 ## With default configuration
