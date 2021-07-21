@@ -10,6 +10,7 @@ RUN git clone https://github.com/processone/ejabberd.git
 WORKDIR /ejabberd
 COPY vars.config .
 RUN echo '{vsn, "'${VERSION}'.0"}.' >>vars.config
+COPY config.exs config/
 COPY rel/*exs rel/
 RUN git checkout ${VERSION/latest/HEAD} \
     && mix deps.get \
