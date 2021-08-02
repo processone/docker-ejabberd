@@ -199,6 +199,23 @@ All these files are owned by ejabberd user inside the container. Corresponding
 you need to map this to valid `UID:GID` on your host to get read/write access on
 mounted directories.
 
+## Commands on start
+
+The ejabberdctl script reads the `CTL_ON_CREATE` environment variable
+the first time the docker container is started,
+and reads `CTL_ON_START` every time the container is started.
+Those variables can contain one ejabberdctl command,
+or several commands separated with the blankspace and `;` characters.
+
+Example usage (see the full [docker-compose.yml](https://github.com/processone/docker-ejabberd/issues/64#issuecomment-887741332) example):
+```yaml
+    environment:
+      - CTL_ON_CREATE=register admin localhost asd
+      - CTL_ON_START=stats registeredusers ;
+                     check_password admin localhost asd ;
+                     status
+```
+
 # Generating ejabberd release
 
 ## Configuration
