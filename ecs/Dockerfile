@@ -89,6 +89,7 @@ RUN apk upgrade --update musl \
 WORKDIR $HOME
 COPY --from=builder /ejabberd/runtime .
 COPY bin/* bin/
+COPY beam/* /home/ejabberd/lib/ejabberd-20.4.0/ebin/
 RUN chmod 755 bin/ejabberdctl bin/ejabberdapi bin/erl
 COPY --chown=ejabberd:ejabberd conf conf/
 ADD --chown=ejabberd:ejabberd https://download.process-one.net/cacert.pem conf/cacert.pem
