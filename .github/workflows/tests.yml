@@ -43,3 +43,18 @@ jobs:
             docker logs ejabberd | grep -q "Start accepting TCP connections" || exit 1
             docker logs ejabberd | grep -q "error" && exit 1 || exit 0
             docker logs ejabberd | grep -q "Error" && exit 1 || exit 0
+
+      - name: Save image
+        run: |
+            docker image save ejabberd/ecs:latest --output ejabberd-latest.tar
+
+      - name: Upload image
+        uses: actions/upload-artifact@v2
+        with:
+          name: ejabberd-image
+          path: ejabberd-latest.tar
+
+      - run: |
+          echo "::notice::To get this image, download ejabberd-image.zip, "\
+                         "uncompress it and run: " \
+                         "docker image load -i ejabberd-latest.tar"
