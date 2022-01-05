@@ -25,7 +25,7 @@ jobs:
       - name: Build ecs image
         run: |
             cd ecs
-            ./build.sh
+            ./build.sh latest
 
       - name: Run ecs image
         run: |
