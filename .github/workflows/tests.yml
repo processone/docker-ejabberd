@@ -5,12 +5,10 @@ on:
     paths-ignore:
       - '**.md'
       - '**.bat'
-      - 'mix/**'
   pull_request:
     paths-ignore:
       - '**.md'
       - '**.bat'
-      - 'mix/**'
 
 jobs:
   build:
@@ -23,6 +21,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Build mix image
+        run: |
+            (cd mix && docker build -t ejabberd/mix .)
 
       - name: Build ecs image
         run: |
