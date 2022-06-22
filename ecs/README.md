@@ -25,7 +25,7 @@ If you are using a Windows operating system, check the tutorials mentioned in
 You can start ejabberd in a new container with the following command:
 
 ```bash
-docker run --name ejabberd -d -p 5222:5222 ejabberd/ecs
+docker run --name ejabberd -d -p 5222:5222 --init ejabberd/ecs
 ```
 
 This command will run Docker image as a daemon,
@@ -48,7 +48,7 @@ docker restart ejabberd
 If you would like to start ejabberd with an Erlang console attached you can use the `live` command:
 
 ```bash
-docker run -it -p 5222:5222 ejabberd/ecs live
+docker run -it -p 5222:5222 --init ejabberd/ecs live
 ```
 
 This command will use default configuration file and XMPP domain "localhost".
@@ -60,7 +60,7 @@ and share local directory to store database:
 
 ```bash
 mkdir database
-docker run -d --name ejabberd -v $(pwd)/ejabberd.yml:/home/ejabberd/conf/ejabberd.yml -v $(pwd)/database:/home/ejabberd/database -p 5222:5222 ejabberd/ecs
+docker run -d --name ejabberd -v $(pwd)/ejabberd.yml:/home/ejabberd/conf/ejabberd.yml -v $(pwd)/database:/home/ejabberd/database -p 5222:5222 --init ejabberd/ecs
 ```
 
 # Next steps
