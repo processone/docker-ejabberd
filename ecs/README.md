@@ -209,7 +209,7 @@ and reads `CTL_ON_START` every time the container is started.
 Those variables can contain one ejabberdctl command,
 or several commands separated with the blankspace and `;` characters.
 
-Example usage (see the full [docker-compose.yml](https://github.com/processone/docker-ejabberd/issues/64#issuecomment-887741332) example):
+Example usage (or check the [full example](#customized-example)):
 ```yaml
     environment:
       - CTL_ON_CREATE=register admin localhost asd
