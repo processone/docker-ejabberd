@@ -1,0 +1,42 @@
+name: code-server
+
+on:
+  push:
+    paths:
+      - '.github/workflows/code-server.yml'
+      - 'code-server/**'
+
+jobs:
+
+  code-server:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Build image
+        run: docker build
+               code-server
+               --tag code-server
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push image
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/code-server
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          docker tag code-server $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
