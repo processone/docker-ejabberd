@@ -2,13 +2,15 @@ name: Tests
 
 on:
   push:
-    paths-ignore:
-      - '**.md'
-      - '**.bat'
+    paths:
+      - '.github/workflows/tests.yml'
+      - 'ecs/**'
+      - 'mix/**'
   pull_request:
-    paths-ignore:
-      - '**.md'
-      - '**.bat'
+    paths:
+      - '.github/workflows/tests.yml'
+      - 'ecs/**'
+      - 'mix/**'
 
 jobs:
   build:
