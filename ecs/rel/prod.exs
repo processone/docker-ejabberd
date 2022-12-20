@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 # This is standard path in the context of ejabberd release
 config :ejabberd,
