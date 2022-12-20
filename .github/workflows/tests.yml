@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Build mix image
         run: |
@@ -55,7 +55,7 @@ jobs:
             docker image save ejabberd/ecs:latest --output ejabberd-latest.tar
 
       - name: Upload image
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ejabberd-image
           path: ejabberd-latest.tar
