@@ -35,7 +35,7 @@ ARG INSTALL_ZSH="true"
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
-ARG COMMON_SCRIPT_SOURCE="https://raw.githubusercontent.com/devcontainers/images/main/src/base-alpine/.devcontainer/library-scripts/common-alpine.sh"
+ARG COMMON_SCRIPT_SOURCE="https://raw.githubusercontent.com/devcontainers/images/v0.2.31/src/base-alpine/.devcontainer/library-scripts/common-alpine.sh"
 RUN apk update \
   && curl -sSL ${COMMON_SCRIPT_SOURCE} -o /tmp/common-alpine.sh \
   && ash /tmp/common-alpine.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" \
