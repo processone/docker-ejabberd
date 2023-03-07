@@ -218,6 +218,32 @@ Example usage (or check the [full example](#customized-example)):
                      status
 ```
 
+## Clustering
+
+When setting several Docker containers to form a
+[cluster of ejabberd nodes](https://docs.ejabberd.im/admin/guide/clustering/),
+each one must have a different
+[Erlang Node Name](https://docs.ejabberd.im/admin/guide/security/#erlang-node-name)
+and the same
+[Erlang Cookie](https://docs.ejabberd.im/admin/guide/security/#erlang-cookie).
+For this you can either:
+- edit `conf/ejabberdctl.cfg` and set variables `ERLANG_NODE` and `ERLANG_COOKIE`
+- set the environment variables `ERLANG_NODE_ARG` and `ERLANG_COOKIE`
+
+Once you have the ejabberd nodes properly set and running,
+you can tell the secondary nodes to join the master node using the
+[`join_cluster`](https://docs.ejabberd.im/developer/ejabberd-api/admin-api/#join-cluster)
+API call.
+
+Example using environment variables (see the full
+[`docker-compose.yml` clustering example](#clustering-example)):
+```yaml
+environment:
+  - ERLANG_NODE_ARG=ejabberd@replica
+  - ERLANG_COOKIE=dummycookie123
+  - CTL_ON_CREATE=join_cluster ejabberd@main
+```
+
 # Generating ejabberd release
 
 ## Configuration
