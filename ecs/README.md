@@ -218,6 +218,169 @@ Example usage (or check the [full example](#customized-example)):
                      status
 ```
 
+## Clustering
+
+When setting several Docker containers to form a
+[cluster of ejabberd nodes](https://docs.ejabberd.im/admin/guide/clustering/),
+each one must have a different
+[Erlang Node Name](https://docs.ejabberd.im/admin/guide/security/#erlang-node-name)
+and the same
+[Erlang Cookie](https://docs.ejabberd.im/admin/guide/security/#erlang-cookie).
+For this you can either:
+- edit `conf/ejabberdctl.cfg` and set variables `ERLANG_NODE` and `ERLANG_COOKIE`
+- set the environment variables `ERLANG_NODE_ARG` and `ERLANG_COOKIE`
+
+Once you have the ejabberd nodes properly set and running,
+you can tell the secondary nodes to join the master node using the
+[`join_cluster`](https://docs.ejabberd.im/developer/ejabberd-api/admin-api/#join-cluster)
+API call.
+
+Example using environment variables (see the full
+[`docker-compose.yml` clustering example](#clustering-example)):
+```yaml
+environment:
+  - ERLANG_NODE_ARG=ejabberd@replica
+  - ERLANG_COOKIE=dummycookie123
+  - CTL_ON_CREATE=join_cluster ejabberd@main
+```
+
+## Change Mnesia Node Name
+
+To use the same Mnesia database in a container with a different hostname,
+it is necessary to change the old hostname stored in Mnesia.
+
+This section is equivalent to the ejabberd Documentation
+[Change Computer Hostname](https://docs.ejabberd.im/admin/guide/managing/#change-computer-hostname),
+but particularized to containers that use this
+ecs container image from ejabberd 23.01 or older.
+
+### Setup Old Container
+
+Let's assume a container running ejabberd 23.01 (or older) from
+this ecs container image, with the database directory binded
+and one registered account.
+This can be produced with:
+```bash
+OLDCONTAINER=ejaold
+NEWCONTAINER=ejanew
+
+mkdir database
+sudo chown 9000:9000 database
+docker run -d --name $OLDCONTAINER -p 5222:5222 \
+       -v $(pwd)/database:/home/ejabberd/database \
+       ejabberd/ecs:23.01
+docker exec -it $OLDCONTAINER bin/ejabberdctl started
+docker exec -it $OLDCONTAINER bin/ejabberdctl register user1 localhost somepass
+docker exec -it $OLDCONTAINER bin/ejabberdctl registered_users localhost
+```
+
+Methods to know the Erlang node name:
+```bash
+ls database/ | grep ejabberd@
+docker exec -it $OLDCONTAINER bin/ejabberdctl status
+docker exec -it $OLDCONTAINER grep "started in the node" logs/ejabberd.log
+```
+
+### Change Mnesia Node
+
+First of all let's store the Erlang node names and paths in variables.
+In this example they would be:
+```bash
+OLDCONTAINER=ejaold
+NEWCONTAINER=ejanew
+OLDNODE=ejabberd@95145ddee27c
+NEWNODE=ejabberd@localhost
+OLDFILE=/home/ejabberd/database/old.backup
+NEWFILE=/home/ejabberd/database/new.backup
+```
+
+1. Start your old container that can still read the Mnesia database correctly.
+If you have the Mnesia spool files,
+but don't have access to the old container anymore, go to
+[Create Temporary Container](#create-temporary-container)
+and later come back here.
+
+2. Generate a backup file and check it was created:
+```bash
+docker exec -it $OLDCONTAINER bin/ejabberdctl backup $OLDFILE
+ls -l database/*.backup
+```
+
+3. Stop ejabberd:
+```bash
+docker stop $OLDCONTAINER
+```
+
+4. Create the new container. For example:
+```bash
+docker run \
+       --name $NEWCONTAINER \
+       -d \
+       -p 5222:5222 \
+       -v $(pwd)/database:/home/ejabberd/database \
+       ejabberd/ecs:latest
+```
+
+5. Convert the backup file to new node name:
+```bash
+docker exec -it $NEWCONTAINER bin/ejabberdctl mnesia_change_nodename $OLDNODE $NEWNODE $OLDFILE $NEWFILE
+```
+
+6. Install the backup file as a fallback:
+```bash
+docker exec -it $NEWCONTAINER bin/ejabberdctl install_fallback $NEWFILE
+```
+
+7. Restart the container:
+```bash
+docker restart $NEWCONTAINER
+```
+
+8. Check that the information of the old database is available.
+In this example, it should show that the account `user1` is registered:
+```bash
+docker exec -it $NEWCONTAINER bin/ejabberdctl registered_users localhost
+```
+
+9. When the new container is working perfectly with the converted Mnesia database,
+you may want to remove the unneeded files:
+the old container, the old Mnesia spool files, and the backup files.
+
+### Create Temporary Container
+
+In case the old container that used the Mnesia database is not available anymore,
+a temporary container can be created just to read the Mnesia database
+and make a backup of it, as explained in the previous section.
+
+This method uses `--hostname` command line argument for docker,
+and `ERLANG_NODE_ARG` environment variable for ejabberd.
+Their values must be the hostname of your old container
+and the Erlang node name of your old ejabberd node.
+To know the Erlang node name please check
+[Setup Old Container](#setup-old-container).
+
+Command line example:
+```bash
+OLDHOST=${OLDNODE#*@}
+docker run \
+       -d \
+       --name $OLDCONTAINER \
+       --hostname $OLDHOST \
+       -p 5222:5222 \
+       -v $(pwd)/database:/home/ejabberd/database \
+       -e ERLANG_NODE_ARG=$OLDNODE \
+       ejabberd/ecs:latest
+```
+
+Check the old database content is available:
+```bash
+docker exec -it $OLDCONTAINER bin/ejabberdctl registered_users localhost
+```
+
+Now that you have ejabberd running with access to the Mnesia database,
+you can continue with step 2 of previous section
+[Change Mnesia Node](#change-mnesia-node).
+
 # Generating ejabberd release
 
 ## Configuration
