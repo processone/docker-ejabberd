@@ -12,6 +12,11 @@ on:
       - 'ecs/**'
       - 'mix/**'
 
+env:
+  REGISTRY: ghcr.io
+  MIX_IMAGE_NAME: ${{ github.repository_owner }}/mix
+  ECS_IMAGE_NAME: ${{ github.repository_owner }}/ecs
+
 jobs:
   build:
     name: Build
@@ -19,24 +24,85 @@ jobs:
     strategy:
       fail-fast: true
       max-parallel: 1
+    permissions:
+      packages: write
 
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Build mix image
-        run: |
-            (cd mix && docker build -t ejabberd/mix .)
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build ecs image
-        run: |
-            cd ecs
-            ./build.sh latest
+      - name: Get git describe
+        id: gitdescribe
+        run: echo "ver=$(git describe --exact-match 2>/dev/null || echo latest)" >> $GITHUB_OUTPUT
+
+      - name: Extract mix metadata (tags, labels) for Docker
+        id: mixmeta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.MIX_IMAGE_NAME }}
+          labels: |
+            org.opencontainers.image.revision=${{ steps.gitdescribe.outputs.ver }}
+            org.opencontainers.image.licenses=GPL-2.0
+            org.opencontainers.image.vendor=ProcessOne
+
+      - name: Extract ecs metadata (tags, labels) for Docker
+        id: ecsmeta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.ECS_IMAGE_NAME }}
+          labels: |
+            org.opencontainers.image.revision=${{ steps.gitdescribe.outputs.ver }}
+            org.opencontainers.image.licenses=GPL-2.0
+            org.opencontainers.image.vendor=ProcessOne
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push mix image
+        uses: docker/build-push-action@v3
+        with:
+          build-args: |
+            VERSION=${{ steps.gitdescribe.outputs.ver }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          context: mix
+          labels: ${{ steps.mixmeta.outputs.labels }}
+          platforms: linux/amd64
+          load: ${{ github.ref_type != 'tag' }}
+          push: ${{ github.ref_type == 'tag' }}
+          tags: ${{ steps.mixmeta.outputs.tags }}
+
+      - name: Prepare ecs Dockerfile
+        run: sed -i 's|ejabberd/mix|${{ env.REGISTRY }}/${{ env.MIX_IMAGE_NAME }}|g' ecs/Dockerfile
+
+      - name: Build and push ecs image
+        uses: docker/build-push-action@v3
+        with:
+          build-args: |
+            VERSION=${{ steps.gitdescribe.outputs.ver }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          context: ecs
+          labels: ${{ steps.ecsmeta.outputs.labels }}
+          platforms: linux/amd64
+          load: ${{ github.ref_type != 'tag' }}
+          push: ${{ github.ref_type == 'tag' }}
+          tags: ${{ steps.ecsmeta.outputs.tags }}
 
       - name: Run ecs image
         run: |
             docker images
-            docker run --name ejabberd -d -p 5222:5222 ejabberd/ecs:latest
+            docker run --name ejabberd -d -p 5222:5222 ${{ steps.ecsmeta.outputs.tags }}
 
       - name: Wait ejabberd started
         run: |
@@ -52,7 +118,7 @@ jobs:
 
       - name: Save image
         run: |
-            docker image save ejabberd/ecs:latest --output ejabberd-latest.tar
+            docker image save ${{ steps.ecsmeta.outputs.tags }} --output ejabberd-latest.tar
 
       - name: Upload image
         uses: actions/upload-artifact@v3
