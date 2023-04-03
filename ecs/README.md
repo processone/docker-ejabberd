@@ -11,7 +11,7 @@
 ejabberd is an open-source XMPP server, robust, scalable and modular,
 built using Erlang/OTP, and also includes MQTT Broker and SIP Service.
 
-This Docker image allows you to run a single node ejabberd instance in a Docker container.
+This container image allows you to run a single node ejabberd instance in a container.
 
 There is an [Alternative Image in GitHub Packages](HUB-README.md#alternative-image-in-github), built using a different method and some improvements.
 
@@ -28,7 +28,7 @@ You can start ejabberd in a new container with the following command:
 docker run --name ejabberd -d -p 5222:5222 ejabberd/ecs
 ```
 
-This command will run Docker image as a daemon,
+This command will run the container image as a daemon,
 using ejabberd default configuration file and XMPP domain "localhost".
 
 To stop the running container, you can run:
@@ -55,8 +55,8 @@ This command will use default configuration file and XMPP domain "localhost".
 
 ## Start with your configuration and database
 
-The following command will pass config file using Docker volume feature
-and share local directory to store database:
+This command passes the configuration file using the volume feature
+and shares the local directory to store database:
 
 ```bash
 mkdir database
@@ -79,8 +79,7 @@ docker exec -it ejabberd bin/ejabberdctl register admin localhost passw0rd
 
 ## Check ejabberd log files
 
-You can execute a Docker command to check the content of the log files from
-inside to container, even if you do not put it on a shared persistent drive:
+Check the ejabberd log file in the container:
 
 ```bash
 docker exec -it ejabberd tail -f logs/ejabberd.log
@@ -133,7 +132,7 @@ When the container is running (and thus ejabberd), you can exec commands inside 
 using `ejabberdctl` or any other of the available interfaces, see
 [Understanding ejabberd "commands"](https://docs.ejabberd.im/developer/ejabberd-api/#understanding-ejabberd-commands)
 
-Additionally, this Docker image includes the `ejabberdapi` executable.
+Additionally, this container image includes the `ejabberdapi` executable.
 Please check the [ejabberd-api homepage](https://github.com/processone/ejabberd-api)
 for configuration and usage details.
 
@@ -169,11 +168,11 @@ Then you could register new accounts with this query:
 docker exec -it ejabberd bin/ejabberdapi register --endpoint=http://127.0.0.1:5282/ --jid=admin@localhost --password=passw0rd
 ```
 
-# Advanced Docker configuration
+# Advanced container configuration
 
 ## Ports
 
-This Docker image exposes the ports:
+This container image exposes the ports:
 
 - `5222`: The default port for XMPP clients.
 - `5269`: For XMPP federation. Only needed if you want to communicate with users on other servers.
@@ -197,14 +196,14 @@ You should back up or export the content of the directory to persistent storage
 - `/home/ejabberd/upload/`: Directory containing uploaded files. This should also be backed up.
 
 All these files are owned by ejabberd user inside the container. Corresponding
-`UID:GID` is `9000:9000`. If you prefer bind mounts instead of docker volumes, then
+`UID:GID` is `9000:9000`. If you prefer bind mounts instead of volumes, then
 you need to map this to valid `UID:GID` on your host to get read/write access on
 mounted directories.
 
 ## Commands on start
 
 The ejabberdctl script reads the `CTL_ON_CREATE` environment variable
-the first time the docker container is started,
+the first time the container is started,
 and reads `CTL_ON_START` every time the container is started.
 Those variables can contain one ejabberdctl command,
 or several commands separated with the blankspace and `;` characters.
@@ -220,7 +219,7 @@ Example usage (or check the [full example](#customized-example)):
 
 ## Clustering
 
-When setting several Docker containers to form a
+When setting several containers to form a
 [cluster of ejabberd nodes](https://docs.ejabberd.im/admin/guide/clustering/),
 each one must have a different
 [Erlang Node Name](https://docs.ejabberd.im/admin/guide/security/#erlang-node-name)
@@ -391,7 +390,7 @@ The configuration of ejabberd Erlang/OTP release is customized with:
 
 - `rel/config.exs`: Customize ejabberd release
 - `rel/dev.exs`: ejabberd environment configuration for development release
-- `rel/prod.exs`: ejabberd environment configuration for production Docker release
+- `rel/prod.exs`: ejabberd environment configuration for production release
 - `vars.config`: ejabberd compilation configuration options
 - `conf/ejabberd.yml`: ejabberd default config file
 

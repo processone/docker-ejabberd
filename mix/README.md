@@ -6,13 +6,13 @@
 [![Build Status](https://github.com/processone/docker-ejabberd/actions/workflows/tests.yml/badge.svg)](https://github.com/processone/docker-ejabberd/actions/workflows/tests.yml)
 [![GitHub stars](https://img.shields.io/github/stars/processone/docker-ejabberd?style=social)](https://github.com/processone/docker-ejabberd)
 
-## Docker image for ejabberd developers
+## Container image for ejabberd developers
 
-Thanks to this image, you can build ejabberd with dependencies provided in Docker image, without the need to install build software (beside Docker) directly on your own machine.
+Thanks to this image, you can build ejabberd without the need to install build software (beside Docker or equivalent) directly on your own machine.
 
 Please note that this image can likely be reused as is to build other Erlang or Elixir software.
 
-### Building ejabberd from source 
+### Building ejabberd from source
 
 You can build ejabberd from source with all dependencies, with the following commands:
 
