@@ -68,7 +68,7 @@ RUN addgroup ejabberd -g 9000 \
     && chown -R ejabberd:ejabberd /home/ejabberd
 
 # Install required dependencies
-RUN apk upgrade --update musl \
+RUN apk upgrade --update-cache --no-progress \
     && apk add \
     expat \
     freetds \
