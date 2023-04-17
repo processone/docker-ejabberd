@@ -115,16 +115,28 @@ Now update your ejabberd configuration file, for example:
 docker exec -it ejabberd vi conf/ejabberd.yml
 ```
 
-and add the required options:
-```
+and add this option:
+```yaml
 captcha_cmd: /home/ejabberd/lib/ejabberd-21.1.0/priv/bin/captcha.sh
-captcha_url: https://localhost:5443/captcha
 ```
 
 Finally, reload the configuration file or restart the container:
 ```bash
 docker exec ejabberd bin/ejabberdctl reload_config
 ```
+
+If the CAPTCHA image is not visible, there may be a problem generating it
+(the ejabberd log file may show some error message);
+or the image URL may not be correctly detected by ejabberd,
+in that case you can set the correct URL manually, for example:
+```yaml
+captcha_url: https://localhost:5443/captcha
+```
+
+For more details about CAPTCHA options, please check the
+[CAPTCHA](https://docs.ejabberd.im/admin/configuration/basic/#captcha)
+documentation section.
+
 
 ## Use ejabberdapi
 
