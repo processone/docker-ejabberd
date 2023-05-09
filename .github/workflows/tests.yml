@@ -99,10 +99,14 @@ jobs:
           push: ${{ github.ref_type == 'tag' }}
           tags: ${{ steps.ecsmeta.outputs.tags }}
 
+      - name: Get a single tag
+        id: ecstag
+        run: echo "tag=${{ env.REGISTRY }}/${{ env.ECS_IMAGE_NAME }}:${{ github.ref_name }}" >> $GITHUB_OUTPUT
+
       - name: Run ecs image
         run: |
             docker images
-            docker run --name ejabberd -d -p 5222:5222 ${{ steps.ecsmeta.outputs.tags }}
+            docker run --name ejabberd -d -p 5222:5222 ${{ steps.ecstag.outputs.tag }}
 
       - name: Wait ejabberd started
         run: |
@@ -118,7 +122,7 @@ jobs:
 
       - name: Save image
         run: |
-            docker image save ${{ steps.ecsmeta.outputs.tags }} --output ejabberd-latest.tar
+            docker image save ${{ steps.ecstag.outputs.tag }} --output ejabberd-latest.tar
 
       - name: Upload image
         uses: actions/upload-artifact@v3
