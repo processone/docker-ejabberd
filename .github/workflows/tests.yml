@@ -113,6 +113,7 @@ jobs:
             docker exec ejabberd bin/ejabberdctl started
 
       - name: Check ecs results
+        if: always()
         run: |
             docker ps -s
             docker logs ejabberd
