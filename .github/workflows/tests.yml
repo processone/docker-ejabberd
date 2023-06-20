@@ -76,8 +76,9 @@ jobs:
       - name: Prepare local tags
         id: localreg
         run: |
-          echo "mixtag=${{ env.REGISTRY_LOCAL }}/${{ env.MIX_IMAGE_NAME }}:${{ github.ref_name }}" >> $GITHUB_OUTPUT
-          echo "ecstag=${{ env.REGISTRY_LOCAL }}/${{ env.ECS_IMAGE_NAME }}:${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          tag="$(echo ${{ github.ref_name }} | sed -e 's|[/]\+|-|g')"
+          echo "mixtag=${{ env.REGISTRY_LOCAL }}/${{ env.MIX_IMAGE_NAME }}:$tag" >> $GITHUB_OUTPUT
+          echo "ecstag=${{ env.REGISTRY_LOCAL }}/${{ env.ECS_IMAGE_NAME }}:$tag" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
