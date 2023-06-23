@@ -203,6 +203,8 @@ acme:
    contact: "mailto:example-admin@example.com"
    ca_url: "https://acme-staging-v02.api.letsencrypt.org/directory"
 
+captcha_cmd: mod_ecaptcha
+
 modules:
   mod_adhoc: {}
   mod_admin_extra: {}
@@ -216,6 +218,7 @@ modules:
   mod_client_state: {}
   mod_configure: {}
   mod_disco: {}
+  mod_ecaptcha: {}
   mod_fail2ban: {}
   mod_http_api: {}
   mod_http_upload:

@@ -103,6 +103,12 @@ docker exec -it ejabberd bin/ejabberdctl debug
 
 ## CAPTCHA
 
+### Using mod_ecaptcha
+
+`ejabberd/ecs` includes mod_ecpatcha precompiled from [ejabberd-contrib](https://github.com/processone/ejabberd-contrib/tree/master/mod_ecaptcha).
+
+### Using CAPTCHA scripts
+
 ejabberd includes two example CAPTCHA scripts.
 If you want to use any of them, first install some additional required libraries:
 

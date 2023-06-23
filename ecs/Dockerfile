@@ -4,6 +4,7 @@ RUN go install -v \
     && mv bin/ejabberd bin/ejabberdapi
 
 FROM ejabberd/mix as builder
+ARG BUILD_DIR='/ejabberd'
 ARG VERSION
 ENV VERSION=${VERSION:-latest} \
     MIX_ENV=prod
@@ -12,7 +13,23 @@ LABEL maintainer="ProcessOne <contact@process-one.net>" \
 
 # Get ejabberd sources, dependencies, configuration
 RUN git clone https://github.com/processone/ejabberd.git
-WORKDIR /ejabberd
+
+# include mod_ecaptcha from ejabberd-contrib
+WORKDIR $BUILD_DIR/.ejabberd-modules/sources/ejabberd-contrib
+RUN git clone https://github.com/processone/ejabberd-contrib --depth 1 . \
+    && cp mod_ecaptcha/src/mod_ecaptcha.erl $BUILD_DIR/src \
+    && sed -i '/^{deps,/a \ \
+        \n        {ecaptcha, ".*", {git, "https://github.com/seriyps/ecaptcha", {branch, "master"}}},' \
+            $BUILD_DIR/rebar.config \
+    && sed -i '/^     {:xmpp, ">= .*"},/a \ \
+        \n     {:ecaptcha, github: "seriyps/ecaptcha"},' \
+            $BUILD_DIR/mix.exs \
+    && sed -i '/^     included_applications:/a \ \
+        \n                             :ecaptcha,' \
+            $BUILD_DIR/mix.exs \
+    && rm -rf mod_ecaptcha
+
+WORKDIR $BUILD_DIR
 COPY vars.config .
 RUN echo '{vsn, "'${VERSION}'.0"}.' >>vars.config
 COPY config.exs config/
@@ -25,9 +42,8 @@ RUN git checkout ${VERSION/latest/HEAD} \
 RUN MIX_ENV=prod mix release
 
 # Prepare runtime environment
-RUN mkdir runtime \
-    && tar -C runtime -zxf _build/prod/ejabberd-*.tar.gz \
-    && cd runtime \
+WORKDIR $BUILD_DIR/runtime
+RUN tar -zxf $BUILD_DIR/_build/prod/ejabberd-*.tar.gz \
     && cp releases/*/start.boot bin \
     && cp releases/*/start_clean.boot bin \
     && echo 'beam_lib:strip_files(filelib:wildcard("lib/*/ebin/*beam")), init:stop().' | erl >/dev/null \
@@ -38,8 +54,8 @@ RUN mkdir runtime \
     && mkdir lib/ejabberd-$EJABBERD_VERSION/priv/bin \
     && cp /usr/lib/elixir/bin/* bin/ \
     && sed -i 's|ERL_EXEC="erl"|ERL_EXEC="/home/ejabberd/bin/erl"|' bin/elixir \
-    && cp /ejabberd/tools/captcha*sh lib/ejabberd-$EJABBERD_VERSION/priv/bin \
-    && cp -r /ejabberd/sql lib/ejabberd-*/priv
+    && cp $BUILD_DIR/tools/captcha*sh lib/ejabberd-$EJABBERD_VERSION/priv/bin \
+    && cp -r $BUILD_DIR/sql lib/ejabberd-*/priv
 
 # Runtime container
 FROM alpine:3.17
