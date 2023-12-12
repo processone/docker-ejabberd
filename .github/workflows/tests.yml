@@ -77,15 +77,17 @@ jobs:
         id: localreg
         run: |
           tag="$(echo ${{ github.ref_name }} | sed -e 's|[/]\+|-|g')"
-          echo "mixtag=${{ env.REGISTRY_LOCAL }}/${{ env.MIX_IMAGE_NAME }}:$tag" >> $GITHUB_OUTPUT
-          echo "ecstag=${{ env.REGISTRY_LOCAL }}/${{ env.ECS_IMAGE_NAME }}:$tag" >> $GITHUB_OUTPUT
+          echo "mixlocaltag=${{ env.REGISTRY_LOCAL }}/${{ env.MIX_IMAGE_NAME }}:$tag" >> $GITHUB_OUTPUT
+          echo "ecslocaltag=${{ env.REGISTRY_LOCAL }}/${{ env.ECS_IMAGE_NAME }}:$tag" >> $GITHUB_OUTPUT
+          echo "mixtag=${{ env.REGISTRY }}/${{ env.MIX_IMAGE_NAME }}:$tag" >> $GITHUB_OUTPUT
+          echo "ecstag=${{ env.REGISTRY }}/${{ env.ECS_IMAGE_NAME }}:$tag" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         with:
           driver-opts: network=host
 
-      - name: Build and push mix image
+      - name: Build and push local mix image
         uses: docker/build-push-action@v4
         with:
           build-args: |
@@ -97,13 +99,13 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ steps.localreg.outputs.mixtag }}
+            ${{ steps.localreg.outputs.mixlocaltag }}
             ${{ steps.mixmeta.outputs.tags }}
 
       - name: Prepare ecs Dockerfile
-        run: sed -i 's|ejabberd/mix|${{ steps.localreg.outputs.mixtag }}|g' ecs/Dockerfile
+        run: sed -i 's|ejabberd/mix|${{ steps.localreg.outputs.mixlocaltag }}|g' ecs/Dockerfile
 
-      - name: Build and push ecs image
+      - name: Build and push local ecs image
         uses: docker/build-push-action@v3
         with:
           build-args: |
@@ -115,13 +117,13 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ steps.localreg.outputs.ecstag }}
+            ${{ steps.localreg.outputs.ecslocaltag }}
             ${{ steps.ecsmeta.outputs.tags }}
 
       - name: Run ecs image
         run: |
             docker images
-            docker run --name ejabberd -d -p 5222:5222 ${{ steps.localreg.outputs.ecstag }}
+            docker run --name ejabberd -d -p 5222:5222 ${{ steps.localreg.outputs.ecslocaltag }}
 
       - name: Wait ejabberd started
         run: |
@@ -138,7 +140,7 @@ jobs:
 
       - name: Save image
         run: |
-            docker image save ${{ steps.localreg.outputs.ecstag }} --output ejabberd-latest.tar
+            docker image save ${{ steps.localreg.outputs.ecslocaltag }} --output ejabberd-latest.tar
 
       - name: Upload image
         uses: actions/upload-artifact@v3
@@ -150,3 +152,35 @@ jobs:
           echo "::notice::To get this image, download ejabberd-image.zip, "\
                          "uncompress it and run: " \
                          "docker image load -i ejabberd-latest.tar"
+
+      - name: Build and push mix image to GHCR
+        uses: docker/build-push-action@v4
+        if: github.ref_type == 'tag'
+        with:
+          build-args: |
+            VERSION=${{ steps.gitdescribe.outputs.ver }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          context: mix
+          labels: ${{ steps.mixmeta.outputs.labels }}
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ steps.localreg.outputs.mixtag }}
+            ${{ steps.mixmeta.outputs.tags }}
+
+      - name: Build and push ecs image to GHCR
+        uses: docker/build-push-action@v3
+        if: github.ref_type == 'tag'
+        with:
+          build-args: |
+            VERSION=${{ steps.gitdescribe.outputs.ver }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          context: ecs
+          labels: ${{ steps.ecsmeta.outputs.labels }}
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ steps.localreg.outputs.ecstag }}
+            ${{ steps.ecsmeta.outputs.tags }}
