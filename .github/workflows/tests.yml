@@ -110,7 +110,6 @@ jobs:
           push: true
           tags: |
             ${{ steps.localreg.outputs.mixlocaltag }}
-            ${{ steps.mixmeta.outputs.tags }}
 
       - name: Prepare ecs Dockerfile
         run: sed -i 's|ejabberd/mix|${{ steps.localreg.outputs.mixlocaltag }}|g' ecs/Dockerfile
@@ -128,7 +127,6 @@ jobs:
           push: true
           tags: |
             ${{ steps.localreg.outputs.ecslocaltag }}
-            ${{ steps.ecsmeta.outputs.tags }}
 
       - name: Run ecs image
         run: |
@@ -176,7 +174,6 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ steps.localreg.outputs.mixtag }}
             ${{ steps.mixmeta.outputs.tags }}
 
       - name: Build and push ecs image to GHCR
@@ -192,5 +189,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ steps.localreg.outputs.ecstag }}
             ${{ steps.ecsmeta.outputs.tags }}
