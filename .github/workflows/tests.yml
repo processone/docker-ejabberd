@@ -22,6 +22,7 @@ env:
   ECS_IMAGENAME_DOCKERHUB: ${{ secrets.DOCKERHUB_USERNAME }}/ecs
 
 jobs:
+
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -43,7 +44,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Log in to the Container registry
+      - name: Login to GHCR
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY_GHCR }}
@@ -59,7 +60,7 @@ jobs:
         id: gitdescribe
         run: echo "ver=$(git describe --exact-match 2>/dev/null || echo latest)" >> $GITHUB_OUTPUT
 
-      - name: Extract mix metadata (tags, labels) for Docker
+      - name: Extract mix metadata (tags, labels)
         id: mixmeta
         if: github.ref_type == 'tag'
         uses: docker/metadata-action@v4
@@ -72,7 +73,7 @@ jobs:
             org.opencontainers.image.licenses=GPL-2.0
             org.opencontainers.image.vendor=ProcessOne
 
-      - name: Extract ecs metadata (tags, labels) for Docker
+      - name: Extract ecs metadata (tags, labels)
         id: ecsmeta
         if: github.ref_type == 'tag'
         uses: docker/metadata-action@v4
@@ -161,7 +162,7 @@ jobs:
                          "uncompress it and run: " \
                          "docker image load -i ejabberd-latest.tar"
 
-      - name: Build and push mix image to GHCR
+      - name: Build and push mix image
         uses: docker/build-push-action@v4
         if: github.ref_type == 'tag'
         with:
@@ -176,7 +177,7 @@ jobs:
           tags: |
             ${{ steps.mixmeta.outputs.tags }}
 
-      - name: Build and push ecs image to GHCR
+      - name: Build and push ecs image
         uses: docker/build-push-action@v3
         if: github.ref_type == 'tag'
         with:
