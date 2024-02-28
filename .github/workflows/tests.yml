@@ -13,10 +13,13 @@ on:
       - 'mix/**'
 
 env:
-  REGISTRY: ghcr.io
+  REGISTRY_GHCR: ghcr.io
   REGISTRY_LOCAL: localhost:5000
-  MIX_IMAGE_NAME: ${{ github.repository_owner }}/mix
-  ECS_IMAGE_NAME: ${{ github.repository_owner }}/ecs
+  REGISTRY_DOCKER: docker.io
+  MIX_IMAGENAME_GHCR: ${{ github.repository_owner }}/mix
+  ECS_IMAGENAME_GHCR: ${{ github.repository_owner }}/ecs
+  MIX_IMAGENAME_DOCKERHUB: ${{ secrets.DOCKERHUB_USERNAME }}/mix
+  ECS_IMAGENAME_DOCKERHUB: ${{ secrets.DOCKERHUB_USERNAME }}/ecs
 
 jobs:
   build:
@@ -43,9 +46,14 @@ jobs:
       - name: Log in to the Container registry
         uses: docker/login-action@v2
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ${{ env.REGISTRY_GHCR }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Get git describe
         id: gitdescribe
@@ -56,7 +64,9 @@ jobs:
         if: github.ref_type == 'tag'
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.MIX_IMAGE_NAME }}
+          images: |
+            ${{ env.REGISTRY_GHCR }}/${{ env.MIX_IMAGENAME_GHCR }}
+            ${{ env.REGISTRY_DOCKER }}/${{ env.MIX_IMAGENAME_DOCKERHUB }}
           labels: |
             org.opencontainers.image.revision=${{ steps.gitdescribe.outputs.ver }}
             org.opencontainers.image.licenses=GPL-2.0
@@ -67,7 +77,9 @@ jobs:
         if: github.ref_type == 'tag'
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.ECS_IMAGE_NAME }}
+          images: |
+            ${{ env.REGISTRY_GHCR }}/${{ env.ECS_IMAGENAME_GHCR }}
+            ${{ env.REGISTRY_DOCKER }}/${{ env.ECS_IMAGENAME_DOCKERHUB }}
           labels: |
             org.opencontainers.image.revision=${{ steps.gitdescribe.outputs.ver }}
             org.opencontainers.image.licenses=GPL-2.0
@@ -77,10 +89,8 @@ jobs:
         id: localreg
         run: |
           tag="$(echo ${{ github.ref_name }} | sed -e 's|[/]\+|-|g')"
-          echo "mixlocaltag=${{ env.REGISTRY_LOCAL }}/${{ env.MIX_IMAGE_NAME }}:$tag" >> $GITHUB_OUTPUT
-          echo "ecslocaltag=${{ env.REGISTRY_LOCAL }}/${{ env.ECS_IMAGE_NAME }}:$tag" >> $GITHUB_OUTPUT
-          echo "mixtag=${{ env.REGISTRY }}/${{ env.MIX_IMAGE_NAME }}:$tag" >> $GITHUB_OUTPUT
-          echo "ecstag=${{ env.REGISTRY }}/${{ env.ECS_IMAGE_NAME }}:$tag" >> $GITHUB_OUTPUT
+          echo "mixlocaltag=${{ env.REGISTRY_LOCAL }}/${{ env.MIX_IMAGENAME_GHCR }}:$tag" >> $GITHUB_OUTPUT
+          echo "ecslocaltag=${{ env.REGISTRY_LOCAL }}/${{ env.ECS_IMAGENAME_GHCR }}:$tag" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
