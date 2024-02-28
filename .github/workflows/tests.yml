@@ -40,18 +40,19 @@ jobs:
     steps:
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Login to GHCR
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY_GHCR }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -63,7 +64,7 @@ jobs:
       - name: Extract mix metadata (tags, labels)
         id: mixmeta
         if: github.ref_type == 'tag'
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: |
             ${{ env.REGISTRY_GHCR }}/${{ env.MIX_IMAGENAME_GHCR }}
@@ -94,12 +95,12 @@ jobs:
           echo "ecslocaltag=${{ env.REGISTRY_LOCAL }}/${{ env.ECS_IMAGENAME_GHCR }}:$tag" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
         with:
           driver-opts: network=host
 
       - name: Build and push local mix image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           build-args: |
             VERSION=${{ steps.gitdescribe.outputs.ver }}
@@ -116,7 +117,7 @@ jobs:
         run: sed -i 's|ejabberd/mix|${{ steps.localreg.outputs.mixlocaltag }}|g' ecs/Dockerfile
 
       - name: Build and push local ecs image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           build-args: |
             VERSION=${{ steps.gitdescribe.outputs.ver }}
@@ -152,7 +153,7 @@ jobs:
             docker image save ${{ steps.localreg.outputs.ecslocaltag }} --output ejabberd-latest.tar
 
       - name: Upload image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ejabberd-image
           path: ejabberd-latest.tar
@@ -163,7 +164,7 @@ jobs:
                          "docker image load -i ejabberd-latest.tar"
 
       - name: Build and push mix image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         if: github.ref_type == 'tag'
         with:
           build-args: |
@@ -178,7 +179,7 @@ jobs:
             ${{ steps.mixmeta.outputs.tags }}
 
       - name: Build and push ecs image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         if: github.ref_type == 'tag'
         with:
           build-args: |
