@@ -59,7 +59,7 @@ jobs:
 
       - name: Get git describe
         id: gitdescribe
-        run: echo "ver=$(git describe --exact-match 2>/dev/null || echo latest)" >> $GITHUB_OUTPUT
+        run: echo "ver=$(git describe --tags --exact-match 2>/dev/null || echo latest)" >> $GITHUB_OUTPUT
 
       - name: Extract mix metadata (tags, labels)
         id: mixmeta
