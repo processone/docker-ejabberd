@@ -18,8 +18,8 @@ env:
   REGISTRY_DOCKER: docker.io
   MIX_IMAGENAME_GHCR: ${{ github.repository_owner }}/mix
   ECS_IMAGENAME_GHCR: ${{ github.repository_owner }}/ecs
-  MIX_IMAGENAME_DOCKERHUB: ${{ secrets.DOCKERHUB_USERNAME }}/mix
-  ECS_IMAGENAME_DOCKERHUB: ${{ secrets.DOCKERHUB_USERNAME }}/ecs
+  MIX_IMAGENAME_DOCKERHUB: ejabberd/mix
+  ECS_IMAGENAME_DOCKERHUB: ejabberd/ecs
 
 jobs:
 
