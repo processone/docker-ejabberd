@@ -77,7 +77,7 @@ jobs:
       - name: Extract ecs metadata (tags, labels)
         id: ecsmeta
         if: github.ref_type == 'tag'
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: |
             ${{ env.REGISTRY_GHCR }}/${{ env.ECS_IMAGENAME_GHCR }}
