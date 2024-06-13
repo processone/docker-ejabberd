@@ -1,6 +1,6 @@
 FROM docker.io/golang:1.20-alpine AS api
 RUN go install -v \
-    github.com/processone/ejabberd-api/cmd/ejabberd@master \
+    github.com/processone/ejabberd-api/cmd/ejabberd@latest \
     && mv bin/ejabberd bin/ejabberdapi
 
 FROM ejabberd/mix as builder
