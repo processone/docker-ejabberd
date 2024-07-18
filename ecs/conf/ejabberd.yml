@@ -17,7 +17,7 @@
 hosts:
   - localhost
 
-loglevel: 4
+loglevel: info
 log_rotate_size: 10485760
 log_rotate_date: ""
 log_rotate_count: 1
@@ -49,25 +49,26 @@ listen:
     ip: "::"
     module: ejabberd_s2s_in
     max_stanza_size: 524288
+    shaper: s2s_shaper
   -
     port: 5443
     ip: "::"
     module: ejabberd_http
     tls: true
     request_handlers:
-      "/admin": ejabberd_web_admin
-      "/api": mod_http_api
-      "/bosh": mod_bosh
-      "/captcha": ejabberd_captcha
-      "/upload": mod_http_upload
-      "/ws": ejabberd_http_ws
-      "/oauth": ejabberd_oauth
+      /admin: ejabberd_web_admin
+      /api: mod_http_api
+      /bosh: mod_bosh
+      /captcha: ejabberd_captcha
+      /upload: mod_http_upload
+      /ws: ejabberd_http_ws
+      /oauth: ejabberd_oauth
   -
     port: 5280
     ip: "::"
     module: ejabberd_http
     request_handlers:
-      "/admin": ejabberd_web_admin
+      /admin: ejabberd_web_admin
   -
     port: 1883
     ip: "::"
@@ -156,22 +157,25 @@ access_rules:
 
 api_permissions:
   "console commands":
-    from:
-      - ejabberd_ctl
+    from: ejabberd_ctl
     who: all
+    what: "*"
+  "webadmin commands":
+    from: ejabberd_web_admin
+    who: admin
     what: "*"
   "admin access":
     who:
       access:
         allow:
-          acl: loopback
-          acl: admin
+          - acl: loopback
+          - acl: admin
       oauth:
         scope: "ejabberd:admin"
         access:
           allow:
-            acl: loopback
-            acl: admin
+            - acl: loopback
+            - acl: admin
     what:
       - "*"
       - "!stop"
@@ -184,8 +188,10 @@ api_permissions:
       - connected_users_number
 
 shaper:
-  normal: 1000
-  fast: 50000
+  normal:
+    rate: 3000
+    burst_size: 20000
+  fast: 100000
 
 shaper_rules:
   max_user_sessions: 10
@@ -220,6 +226,10 @@ modules:
   mod_http_api: {}
   mod_http_upload:
     put_url: https://@HOST@:5443/upload
+    custom_headers:
+      "Access-Control-Allow-Origin": "https://@HOST@"
+      "Access-Control-Allow-Methods": "GET,HEAD,PUT,OPTIONS"
+      "Access-Control-Allow-Headers": "Content-Type"
   mod_last: {}
   mod_mam:
     ## Mnesia is limited to 2GB, better to use an SQL backend
@@ -227,7 +237,7 @@ modules:
     ## to configure. Uncomment this when you have SQL configured:
     ## db_type: sql
     assume_mam_usage: true
-    default: never
+    default: always
   mod_mqtt: {}
   mod_muc:
     access:
@@ -240,7 +250,7 @@ modules:
       - allow
     default_room_options:
       allow_subscription: true  # enable MucSub
-      mam: false
+      mam: true
   mod_muc_admin: {}
   mod_offline:
     access_max_user_messages: max_user_offline_messages
