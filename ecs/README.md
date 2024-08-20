@@ -78,7 +78,7 @@ to start using it for administrative purposes.
 You can register this account using the `ejabberdctl` script, for example:
 
 ```bash
-docker exec -it ejabberd bin/ejabberdctl register admin localhost passw0rd
+docker exec -it ejabberd ejabberdctl register admin localhost passw0rd
 ```
 
 ### Check ejabberd log files
@@ -102,7 +102,7 @@ docker exec -it ejabberd sh
 You can open a live debug Erlang console attached to a running container:
 
 ```bash
-docker exec -it ejabberd bin/ejabberdctl debug
+docker exec -it ejabberd ejabberdctl debug
 ```
 
 ### CAPTCHA
@@ -126,7 +126,7 @@ captcha_cmd: /home/ejabberd/lib/ejabberd-21.1.0/priv/bin/captcha.sh
 
 Finally, reload the configuration file or restart the container:
 ```bash
-docker exec ejabberd bin/ejabberdctl reload_config
+docker exec ejabberd ejabberdctl reload_config
 ```
 
 If the CAPTCHA image is not visible, there may be a problem generating it
@@ -181,7 +181,7 @@ api_permissions:
 Then you could register new accounts with this query:
 
 ```bash
-docker exec -it ejabberd bin/ejabberdapi register --endpoint=http://127.0.0.1:5282/ --jid=admin@localhost --password=passw0rd
+docker exec -it ejabberd ejabberdapi register --endpoint=http://127.0.0.1:5282/ --jid=admin@localhost --password=passw0rd
 ```
 
 ## Advanced container configuration
@@ -287,15 +287,15 @@ sudo chown 9000:9000 database
 docker run -d --name $OLDCONTAINER -p 5222:5222 \
        -v $(pwd)/database:/home/ejabberd/database \
        ejabberd/ecs:23.01
-docker exec -it $OLDCONTAINER bin/ejabberdctl started
-docker exec -it $OLDCONTAINER bin/ejabberdctl register user1 localhost somepass
-docker exec -it $OLDCONTAINER bin/ejabberdctl registered_users localhost
+docker exec -it $OLDCONTAINER ejabberdctl started
+docker exec -it $OLDCONTAINER ejabberdctl register user1 localhost somepass
+docker exec -it $OLDCONTAINER ejabberdctl registered_users localhost
 ```
 
 Methods to know the Erlang node name:
 ```bash
 ls database/ | grep ejabberd@
-docker exec -it $OLDCONTAINER bin/ejabberdctl status
+docker exec -it $OLDCONTAINER ejabberdctl status
 docker exec -it $OLDCONTAINER grep "started in the node" logs/ejabberd.log
 ```
 
@@ -320,7 +320,7 @@ and later come back here.
 
 2. Generate a backup file and check it was created:
 ```bash
-docker exec -it $OLDCONTAINER bin/ejabberdctl backup $OLDFILE
+docker exec -it $OLDCONTAINER ejabberdctl backup $OLDFILE
 ls -l database/*.backup
 ```
 
@@ -341,12 +341,12 @@ docker run \
 
 5. Convert the backup file to new node name:
 ```bash
-docker exec -it $NEWCONTAINER bin/ejabberdctl mnesia_change_nodename $OLDNODE $NEWNODE $OLDFILE $NEWFILE
+docker exec -it $NEWCONTAINER ejabberdctl mnesia_change_nodename $OLDNODE $NEWNODE $OLDFILE $NEWFILE
 ```
 
 6. Install the backup file as a fallback:
 ```bash
-docker exec -it $NEWCONTAINER bin/ejabberdctl install_fallback $NEWFILE
+docker exec -it $NEWCONTAINER ejabberdctl install_fallback $NEWFILE
 ```
 
 7. Restart the container:
@@ -357,7 +357,7 @@ docker restart $NEWCONTAINER
 8. Check that the information of the old database is available.
 In this example, it should show that the account `user1` is registered:
 ```bash
-docker exec -it $NEWCONTAINER bin/ejabberdctl registered_users localhost
+docker exec -it $NEWCONTAINER ejabberdctl registered_users localhost
 ```
 
 9. When the new container is working perfectly with the converted Mnesia database,
@@ -392,7 +392,7 @@ docker run \
 
 Check the old database content is available:
 ```bash
-docker exec -it $OLDCONTAINER bin/ejabberdctl registered_users localhost
+docker exec -it $OLDCONTAINER ejabberdctl registered_users localhost
 ```
 
 Now that you have ejabberd running with access to the Mnesia database,
