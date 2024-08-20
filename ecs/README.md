@@ -1,9 +1,13 @@
 
-[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/ejabberd/ecs)](https://hub.docker.com/r/ejabberd/ecs/)
+
+[![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/processone/ejabberd?sort=semver&logo=embarcadero&label=&color=49c0c4)](https://github.com/processone/ejabberd/tags)
+[![ejabberd Container on GitHub](https://img.shields.io/github/v/tag/processone/ejabberd?label=ejabberd&sort=semver&logo=docker)](https://github.com/processone/ejabberd/pkgs/container/ejabberd)
+[![ecs Container on Docker](https://img.shields.io/docker/v/ejabberd/ecs?label=ecs&sort=semver&logo=docker)](https://hub.docker.com/r/ejabberd/ecs/)
+
+[![Build Status](https://github.com/processone/docker-ejabberd/actions/workflows/tests.yml/badge.svg)](https://github.com/processone/docker-ejabberd/actions/workflows/tests.yml)
 [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/ejabberd/ecs)](https://hub.docker.com/r/ejabberd/ecs/)
 [![Docker Stars](https://img.shields.io/docker/stars/ejabberd/ecs)](https://hub.docker.com/r/ejabberd/ecs/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/ejabberd/ecs)](https://hub.docker.com/r/ejabberd/ecs/)
-[![Build Status](https://github.com/processone/docker-ejabberd/actions/workflows/tests.yml/badge.svg)](https://github.com/processone/docker-ejabberd/actions/workflows/tests.yml)
 [![GitHub stars](https://img.shields.io/github/stars/processone/docker-ejabberd?style=social)](https://github.com/processone/docker-ejabberd)
 
 # ejabberd Community Server
