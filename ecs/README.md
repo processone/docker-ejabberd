@@ -22,9 +22,9 @@ There is an [Alternative Image in GitHub Packages](HUB-README.md#alternative-ima
 If you are using a Windows operating system, check the tutorials mentioned in
 [ejabberd Docs > Docker Image](https://docs.ejabberd.im/admin/installation/#docker-image).
 
-# Start ejabberd
+## Start ejabberd
 
-## With default configuration
+### With default configuration
 
 You can start ejabberd in a new container with the following command:
 
@@ -47,7 +47,7 @@ If needed, you can restart the stopped ejabberd container with:
 docker restart ejabberd
 ```
 
-## Start with Erlang console attached
+### Start with Erlang console attached
 
 If you would like to start ejabberd with an Erlang console attached you can use the `live` command:
 
@@ -57,7 +57,7 @@ docker run -it -p 5222:5222 ejabberd/ecs live
 
 This command will use default configuration file and XMPP domain "localhost".
 
-## Start with your configuration and database
+### Start with your configuration and database
 
 This command passes the configuration file using the volume feature
 and shares the local directory to store database:
@@ -67,9 +67,9 @@ mkdir database
 docker run -d --name ejabberd -v $(pwd)/ejabberd.yml:/home/ejabberd/conf/ejabberd.yml -v $(pwd)/database:/home/ejabberd/database -p 5222:5222 ejabberd/ecs
 ```
 
-# Next steps
+## Next steps
 
-## Register the administrator account
+### Register the administrator account
 
 The default ejabberd configuration has already granted admin privilege
 to an account that would be called `admin@localhost`,
@@ -81,7 +81,7 @@ You can register this account using the `ejabberdctl` script, for example:
 docker exec -it ejabberd bin/ejabberdctl register admin localhost passw0rd
 ```
 
-## Check ejabberd log files
+### Check ejabberd log files
 
 Check the ejabberd log file in the container:
 
@@ -89,7 +89,7 @@ Check the ejabberd log file in the container:
 docker exec -it ejabberd tail -f logs/ejabberd.log
 ```
 
-## Inspect the container files
+### Inspect the container files
 
 The container uses Alpine Linux. You can start a shell there with:
 
@@ -97,7 +97,7 @@ The container uses Alpine Linux. You can start a shell there with:
 docker exec -it ejabberd sh
 ```
 
-## Open ejabberd debug console
+### Open ejabberd debug console
 
 You can open a live debug Erlang console attached to a running container:
 
@@ -105,7 +105,7 @@ You can open a live debug Erlang console attached to a running container:
 docker exec -it ejabberd bin/ejabberdctl debug
 ```
 
-## CAPTCHA
+### CAPTCHA
 
 ejabberd includes two example CAPTCHA scripts.
 If you want to use any of them, first install some additional required libraries:
@@ -142,7 +142,7 @@ For more details about CAPTCHA options, please check the
 documentation section.
 
 
-## Use ejabberdapi
+### Use ejabberdapi
 
 When the container is running (and thus ejabberd), you can exec commands inside the container
 using `ejabberdctl` or any other of the available interfaces, see
@@ -184,9 +184,9 @@ Then you could register new accounts with this query:
 docker exec -it ejabberd bin/ejabberdapi register --endpoint=http://127.0.0.1:5282/ --jid=admin@localhost --password=passw0rd
 ```
 
-# Advanced container configuration
+## Advanced container configuration
 
-## Ports
+### Ports
 
 This container image exposes the ports:
 
@@ -197,7 +197,7 @@ This container image exposes the ports:
 - `1883`: Used for MQTT
 - `4369-4399`: EPMD and Erlang connectivity, used for `ejabberdctl` and clustering
 
-## Volumes
+### Volumes
 
 ejabberd produces two types of data: log files and database (Mnesia).
 This is the kind of data you probably want to store on a persistent or local drive (at least the database).
@@ -216,7 +216,7 @@ All these files are owned by ejabberd user inside the container. Corresponding
 you need to map this to valid `UID:GID` on your host to get read/write access on
 mounted directories.
 
-## Commands on start
+### Commands on start
 
 The ejabberdctl script reads the `CTL_ON_CREATE` environment variable
 the first time the container is started,
@@ -236,7 +236,7 @@ Example usage (or check the [full example](#customized-example)):
                      status
 ```
 
-## Clustering
+### Clustering
 
 When setting several containers to form a
 [cluster of ejabberd nodes](https://docs.ejabberd.im/admin/guide/clustering/),
@@ -262,7 +262,7 @@ environment:
   - CTL_ON_CREATE=join_cluster ejabberd@main
 ```
 
-## Change Mnesia Node Name
+### Change Mnesia Node Name
 
 To use the same Mnesia database in a container with a different hostname,
 it is necessary to change the old hostname stored in Mnesia.
@@ -272,7 +272,7 @@ This section is equivalent to the ejabberd Documentation
 but particularized to containers that use this
 ecs container image from ejabberd 23.01 or older.
 
-### Setup Old Container
+#### Setup Old Container
 
 Let's assume a container running ejabberd 23.01 (or older) from
 this ecs container image, with the database directory binded
@@ -299,7 +299,7 @@ docker exec -it $OLDCONTAINER bin/ejabberdctl status
 docker exec -it $OLDCONTAINER grep "started in the node" logs/ejabberd.log
 ```
 
-### Change Mnesia Node
+#### Change Mnesia Node
 
 First of all let's store the Erlang node names and paths in variables.
 In this example they would be:
@@ -364,7 +364,7 @@ docker exec -it $NEWCONTAINER bin/ejabberdctl registered_users localhost
 you may want to remove the unneeded files:
 the old container, the old Mnesia spool files, and the backup files.
 
-### Create Temporary Container
+#### Create Temporary Container
 
 In case the old container that used the Mnesia database is not available anymore,
 a temporary container can be created just to read the Mnesia database
@@ -399,9 +399,9 @@ Now that you have ejabberd running with access to the Mnesia database,
 you can continue with step 2 of previous section
 [Change Mnesia Node](#change-mnesia-node).
 
-# Generating ejabberd release
+## Generating ejabberd release
 
-## Configuration
+### Configuration
 
 Image is built by embedding an ejabberd Erlang/OTP standalone release in the image.
 
@@ -425,9 +425,9 @@ Build ejabberd Community Server base image for a given ejabberd version:
 ./build.sh 18.03
 ```
 
-# Composer Examples
+## Composer Examples
 
-## Minimal Example
+### Minimal Example
 
 This is the barely minimal file to get a usable ejabberd.
 Store it as `docker-compose.yml`:
@@ -449,7 +449,7 @@ Create and start the container with the command:
 docker-compose up
 ```
 
-## Customized Example
+### Customized Example
 
 This example shows the usage of several customizations:
 it uses a local configuration file,
@@ -492,7 +492,7 @@ services:
       - ./database:/home/ejabberd/database
 ```
 
-## Clustering Example
+### Clustering Example
 
 In this example, the main container is created first.
 Once it is fully started and healthy, a second container is created,
