@@ -52,6 +52,7 @@ ENV TERM=xterm \
     LANGUAGE=en_US.UTF-8 \
     REPLACE_OS_VARS=true \
     HOME=/home/ejabberd \
+    PATH="$PATH:/home/ejabberd/bin" \
     VERSION=${VERSION:-latest}
 LABEL maintainer="ProcessOne <contact@process-one.net>" \
     product="Ejabberd Community Server Official Docker Image" \
