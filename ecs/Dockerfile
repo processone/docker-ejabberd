@@ -71,7 +71,9 @@ LABEL maintainer="ProcessOne <contact@process-one.net>" \
 RUN addgroup ejabberd -g 9000 \
     && adduser -s /bin/sh -D -G ejabberd ejabberd -u 9000 \
     && mkdir -p /home/ejabberd/conf /home/ejabberd/database /home/ejabberd/logs /home/ejabberd/upload \
-    && chown -R ejabberd:ejabberd /home/ejabberd
+    && chown -R ejabberd:ejabberd /home/ejabberd \
+    && ln -fs /home/ejabberd /opt/ejabberd \
+    && ln -fs /home/ejabberd /opt/ejabberd-$VERSION
 
 # Install required dependencies
 RUN apk upgrade --update-cache --no-progress \
