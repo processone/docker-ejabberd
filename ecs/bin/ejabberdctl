@@ -258,34 +258,15 @@ help()
 }
 
 # dynamic node name helper
-uid() {
-  ERTSVERSION="$("$ERL" -version 2>&1 | sed 's|.*\([0-9][0-9]\).*|\1|g')"
-  if [ $ERTSVERSION -lt 11 ] ; then # otp 23.0 includes erts 11.0
-    # Erlang/OTP lower than 23, which doesn's support dynamic node code
-    N=1
-    PF=$(( $$ % 97 ))
-    while
-      case $# in
-        0) NN="${PF}-${N}-${ERLANG_NODE}"
-          ;;
-        1) NN="${PF}-${N}-${1}-${ERLANG_NODE}"
-          ;;
-        2) NN="${PF}-${N}-${1}@${2}"
-          ;;
-      esac
-      N=$(( N + 1 + ( $$ % 5 ) ))
-      "$EPMD" -names 2>/dev/null | grep -q " ${NN%@*} "
-    do :; done
-    echo $NN
-  else
-    # Erlang/OTP 23 or higher: use native dynamic node code
-    # https://www.erlang.org/patches/otp-23.0#OTP-13812
-    if [ "$ERLANG_NODE" != "${ERLANG_NODE%.*}" ]; then
-      echo "undefined@${ERLANG_NODE#*@}"
-    else
-      echo "undefined"
-    fi
-  fi
+uid()
+{
+    uuid=$(uuidgen 2>/dev/null)
+    [ -z "$uuid" ] && [ -f /proc/sys/kernel/random/uuid ] && uuid=$(cat /proc/sys/kernel/random/uuid)
+    [ -z "$uuid" ] && uuid=$(printf "%X" "${RANDOM:-$$}$(date +%M%S)")
+    uuid=$(printf '%s' $uuid | sed 's/^\(...\).*$/\1/')
+    [ $# -eq 0 ] && echo "${uuid}-${ERLANG_NODE}"
+    [ $# -eq 1 ] && echo "${uuid}-${1}-${ERLANG_NODE}"
+    [ $# -eq 2 ] && echo "${uuid}-${1}@${2}"
 }
 
 # stop epmd if there is no other running node
