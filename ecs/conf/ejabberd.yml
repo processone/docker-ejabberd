@@ -281,6 +281,7 @@ modules:
   mod_roster:
     versioning: true
   mod_sip: {}
+  mod_s2s_bidi: {}
   mod_s2s_dialback: {}
   mod_shared_roster: {}
   mod_stream_mgmt:
