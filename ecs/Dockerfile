@@ -44,7 +44,7 @@ RUN mkdir runtime \
     && mkdir lib/ejabberd-$EJABBERD_VERSION/priv/bin \
     && cp /usr/lib/elixir/bin/* bin/ \
     && sed -i 's|ERL_EXEC="erl"|ERL_EXEC="/home/ejabberd/bin/erl"|' bin/elixir \
-    && cp /ejabberd/tools/captcha*sh lib/ejabberd-$EJABBERD_VERSION/priv/bin \
+    && cp /ejabberd/tools/captcha*sh bin/ \
     && cp -r /ejabberd/sql lib/ejabberd-*/priv
 
 # Runtime container
@@ -108,7 +108,7 @@ WORKDIR $HOME
 COPY --from=builder /ejabberd/runtime .
 COPY bin/* bin/
 COPY --from=api /go/bin/ejabberdapi bin/ejabberdapi
-RUN chmod 755 bin/ejabberdctl bin/ejabberdapi bin/erl
+RUN chmod 755 bin/ejabberdctl bin/ejabberdapi bin/erl bin/captcha*.sh
 COPY --chown=ejabberd:ejabberd conf conf/
 ADD --chown=ejabberd:ejabberd https://download.process-one.net/cacert.pem conf/cacert.pem
 
