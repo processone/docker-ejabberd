@@ -114,7 +114,7 @@ jobs:
             ${{ steps.localreg.outputs.mixlocaltag }}
 
       - name: Prepare ecs Dockerfile
-        run: sed -i 's|ejabberd/mix|${{ steps.localreg.outputs.mixlocaltag }}|g' ecs/Dockerfile
+        run: sed -i 's|docker.io/ejabberd/mix|${{ steps.localreg.outputs.mixlocaltag }}|g' ecs/Dockerfile
 
       - name: Build and push local ecs image
         uses: docker/build-push-action@v5

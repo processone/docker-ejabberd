@@ -3,7 +3,7 @@ RUN go install -v \
     github.com/processone/ejabberd-api/cmd/ejabberd@latest \
     && mv bin/ejabberd bin/ejabberdapi
 
-FROM ejabberd/mix as builder
+FROM docker.io/ejabberd/mix AS builder
 ARG VERSION
 ENV VERSION=${VERSION:-latest} \
     MIX_ENV=prod
@@ -48,7 +48,7 @@ RUN mkdir runtime \
     && cp -r /ejabberd/sql lib/ejabberd-*/priv
 
 # Runtime container
-FROM alpine:3.19
+FROM docker.io/alpine:3.19
 ARG VERSION
 ARG VCS_REF
 ARG BUILD_DATE
