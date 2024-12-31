@@ -115,7 +115,7 @@ ADD --chown=ejabberd:ejabberd https://download.process-one.net/cacert.pem conf/c
 # Setup runtime environment
 USER ejabberd
 VOLUME ["$HOME/database","$HOME/conf","$HOME/logs","$HOME/upload"]
-EXPOSE 1880 1883 4369-4399 5222 5269 5280 5443
+EXPOSE 1880 1883 4369-4399 5210 5222 5269 5280 5443
 
 ENTRYPOINT ["/sbin/tini","--","/home/ejabberd/bin/ejabberdctl"]
 CMD ["foreground"]
