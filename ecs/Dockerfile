@@ -108,7 +108,10 @@ WORKDIR $HOME
 COPY --from=builder /ejabberd/runtime .
 COPY bin/* bin/
 COPY --from=api /go/bin/ejabberdapi bin/ejabberdapi
-RUN chmod 755 bin/ejabberdctl bin/ejabberdapi bin/erl bin/captcha*.sh
+RUN chmod 755 bin/ejabberdctl bin/ejabberdapi bin/erl bin/captcha*.sh \
+    && mkdir -p /home/ejabberd/sql \
+    && cp /home/ejabberd/lib/ejabberd-*/priv/sql/* /home/ejabberd/database/ \
+    && cp /home/ejabberd/lib/ejabberd-*/priv/sql/* /home/ejabberd/sql/
 COPY --chown=ejabberd:ejabberd conf conf/
 ADD --chown=ejabberd:ejabberd https://download.process-one.net/cacert.pem conf/cacert.pem
 

@@ -285,7 +285,6 @@ stop_epmd()
 
 # make sure node not already running and node name unregistered
 # if all ok, ensure runtime directory exists and make it current directory
-# then (docker case) make .sql files available on database volume
 check_start()
 {
     [ -n "$ERL_DIST_PORT" ] && return
@@ -302,7 +301,6 @@ check_start()
         }
         "$EPMD" -kill >/dev/null
     }
-    cp "$HOME_DIR"/lib/ejabberd-*/priv/sql/* "$HOME_DIR/database/"
 }
 
 post_waiter_fork()
