@@ -43,7 +43,7 @@ Start ejabberd
 Start ejabberd in a new container:
 
 ```bash
-docker run --name ejabberd -d -p 5222:5222 ghcr.io/processone/ejabberd
+docker run --name ejabberd -d -p 5222:5222 docker.io/ejabberd/ecs
 ```
 
 That runs the container as a daemon,
@@ -73,7 +73,7 @@ docker rm ejabberd
 Start ejabberd with an interactive Erlang console attached using the `live` command:
 
 ```bash
-docker run --name ejabberd -it -p 5222:5222 ghcr.io/processone/ejabberd live
+docker run --name ejabberd -it -p 5222:5222 docker.io/ejabberd/ecs live
 ```
 
 That uses the default configuration file and XMPP domain `localhost`.
@@ -92,7 +92,7 @@ mkdir database && chown ejabberd database
 docker run --name ejabberd -it \
   -v $(pwd)/conf/ejabberd.yml:/opt/ejabberd/conf/ejabberd.yml \
   -v $(pwd)/database:/opt/ejabberd/database \
-  -p 5222:5222 ghcr.io/processone/ejabberd live
+  -p 5222:5222 docker.io/ejabberd/ecs live
 ```
 
 Notice that ejabberd runs in the container with an account named `ejabberd`
@@ -370,7 +370,7 @@ Example to connect a local `ejabberdctl` to a containerized ejabberd:
     docker run --name ejabberd -it \
       -e ERLANG_COOKIE=`cat $HOME/.erlang.cookie` \
       -p 5210:5210 -p 5222:5222 \
-      ghcr.io/processone/ejabberd
+      docker.io/ejabberd/ecs
     ```
 2. Set `ERL_DIST_PORT=5210` in `ejabberdctl.cfg` of container and local ejabberd
 3. Restart the container
@@ -428,7 +428,7 @@ mkdir database
 sudo chown 9000:9000 database
 docker run -d --name $OLDCONTAINER -p 5222:5222 \
        -v $(pwd)/database:/opt/ejabberd/database \
-       ghcr.io/processone/ejabberd:23.01
+       docker.io/ejabberd/ecs:23.01
 docker exec -it $OLDCONTAINER ejabberdctl started
 docker exec -it $OLDCONTAINER ejabberdctl register user1 localhost somepass
 docker exec -it $OLDCONTAINER ejabberdctl registered_users localhost
@@ -478,7 +478,7 @@ docker run \
        -d \
        -p 5222:5222 \
        -v $(pwd)/database:/opt/ejabberd/database \
-       ghcr.io/processone/ejabberd:latest
+       docker.io/ejabberd/ecs:latest
 ```
 
 5. Convert the backup file to new node name:
@@ -529,7 +529,7 @@ docker run \
        -p 5222:5222 \
        -v $(pwd)/database:/opt/ejabberd/database \
        -e ERLANG_NODE_ARG=$OLDNODE \
-       ghcr.io/processone/ejabberd:latest
+       docker.io/ejabberd/ecs:latest
 ```
 
 Check the old database content is available:
@@ -627,7 +627,7 @@ and start it with `docker-compose up`:
 ```yaml
 services:
   main:
-    image: ghcr.io/processone/ejabberd
+    image: docker.io/ejabberd/ecs
     container_name: ejabberd
     ports:
       - "5222:5222"
@@ -651,7 +651,7 @@ spec:
   containers:
 
   - name: ejabberd
-    image: ghcr.io/processone/ejabberd
+    image: docker.io/ejabberd/ecs
     ports:
     - containerPort: 5222
       hostPort: 5222
@@ -698,7 +698,7 @@ version: '3.7'
 services:
 
   main:
-    image: ghcr.io/processone/ejabberd
+    image: docker.io/ejabberd/ecs
     container_name: ejabberd
     environment:
       - EJABBERD_MACRO_HOST=example.com
@@ -731,7 +731,7 @@ spec:
   containers:
 
   - name: ejabberd
-    image: ghcr.io/processone/ejabberd
+    image: docker.io/ejabberd/ecs
     env:
     - name: EJABBERD_MACRO_HOST
       value: example.com
@@ -793,7 +793,7 @@ version: '3.7'
 services:
 
   main:
-    image: ghcr.io/processone/ejabberd
+    image: docker.io/ejabberd/ecs
     container_name: main
     environment:
       - ERLANG_NODE_ARG=ejabberd@main
@@ -807,7 +807,7 @@ services:
       retries: 120
 
   replica:
-    image: ghcr.io/processone/ejabberd
+    image: docker.io/ejabberd/ecs
     container_name: replica
     depends_on:
       main:
@@ -840,7 +840,7 @@ spec:
   containers:
 
   - name: first
-    image: ghcr.io/processone/ejabberd
+    image: docker.io/ejabberd/ecs
     env:
     - name: ERLANG_NODE_ARG
       value: main@cluster
@@ -871,7 +871,7 @@ spec:
       readOnly: true
 
   - name: second
-    image: ghcr.io/processone/ejabberd
+    image: docker.io/ejabberd/ecs
     env:
     - name: ERLANG_NODE_ARG
       value: replica@cluster
