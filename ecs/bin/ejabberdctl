@@ -69,7 +69,7 @@ done
 [ -n "$ERLANG_NODE_ARG" ] && ERLANG_NODE="$ERLANG_NODE_ARG"
 [ "$ERLANG_NODE" = "${ERLANG_NODE%.*}" ] && S="-s"
 : "${EJABBERD_LOG_PATH:="$LOGS_DIR/ejabberd.log"}"
-: "${SPOOL_DIR:="$HOME_DIR/database/$ERLANG_NODE"}"
+: "${SPOOL_DIR:="$HOME_DIR/database"}"
 
 [ -n "$ERLANG_COOKIE" ] && [ ! -f "$HOME"/.erlang.cookie ] && {
     echo "$ERLANG_COOKIE" > "$HOME"/.erlang.cookie
@@ -287,6 +287,8 @@ stop_epmd()
 # if all ok, ensure runtime directory exists and make it current directory
 check_start()
 {
+    ECSIMAGE_DBPATH=$HOME/database/$ERLANG_NODE
+    [ ! -d "$ECSIMAGE_DBPATH" ] && ln -s $HOME/database $HOME/database/$ERLANG_NODE
     [ -n "$ERL_DIST_PORT" ] && return
     "$EPMD" -names 2>/dev/null | grep -q " ${ERLANG_NODE%@*} " && {
         pgrep -f "$ERLANG_NODE" >/dev/null && {
