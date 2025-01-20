@@ -24,4 +24,7 @@ RUN echo "export PATH=/workspaces/ejabberd/_build/relive:$PATH" >>.bashrc \
     && chmod 400 .erlang.cookie
 
 WORKDIR /workspaces/ejabberd
-ENTRYPOINT ["code-server", "--bind-addr", "0.0.0.0:5208", "--auth", "none", "/workspaces/ejabberd"]
+VOLUME ["workspaces/ejabberd"]
+EXPOSE 1870 1883 4369-4399 5210 5222 5269 5280 5443
+
+ENTRYPOINT ["code-server", "--bind-addr", "0.0.0.0:1870", "--auth", "none", "/workspaces/ejabberd"]
