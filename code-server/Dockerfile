@@ -18,9 +18,10 @@ USER vscode
 
 RUN /usr/bin/code-server --install-extension erlang-ls.erlang-ls
 
-RUN echo "export PATH=/workspaces/ejabberd/_build/relive:$PATH" >>/home/vscode/.bashrc
-RUN echo "COOKIE" >/home/vscode/.erlang.cookie
-RUN chmod 400 /home/vscode/.erlang.cookie
+WORKDIR /home/vscode
+RUN echo "export PATH=/workspaces/ejabberd/_build/relive:$PATH" >>.bashrc \
+    && echo "COOKIE" >.erlang.cookie \
+    && chmod 400 .erlang.cookie
 
 WORKDIR /workspaces/ejabberd
 ENTRYPOINT ["code-server", "--bind-addr", "0.0.0.0:5208", "--auth", "none", "/workspaces/ejabberd"]
