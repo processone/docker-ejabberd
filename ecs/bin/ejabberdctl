@@ -68,8 +68,12 @@ done
 [ -f "$EJABBERDCTL_CONFIG_PATH" ] && . "$EJABBERDCTL_CONFIG_PATH"
 [ -n "$ERLANG_NODE_ARG" ] && ERLANG_NODE="$ERLANG_NODE_ARG"
 [ "$ERLANG_NODE" = "${ERLANG_NODE%.*}" ] && S="-s"
-: "${EJABBERD_LOG_PATH:="$LOGS_DIR/ejabberd.log"}"
 : "${SPOOL_DIR:="$HOME_DIR/database"}"
+: "${EJABBERD_LOG_PATH:="$LOGS_DIR/ejabberd.log"}"
+
+# backward support for old mnesia spool dir path
+: "${SPOOL_DIR_OLD:="$SPOOL_DIR/$ERLANG_NODE"}"
+[ -r "$SPOOL_DIR_OLD/schema.DAT" ] && [ ! -r "$SPOOL_DIR/schema.DAT" ] && SPOOL_DIR="$SPOOL_DIR_OLD"
 
 [ -n "$ERLANG_COOKIE" ] && [ ! -f "$HOME"/.erlang.cookie ] && {
     echo "$ERLANG_COOKIE" > "$HOME"/.erlang.cookie
