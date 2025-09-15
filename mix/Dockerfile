@@ -1,4 +1,4 @@
-FROM alpine:3.19
+FROM alpine:3.22
 LABEL maintainer="ProcessOne <contact@process-one.net>" \
       product="Ejabberd mix development environment"
 
