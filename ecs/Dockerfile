@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.25-alpine AS api
+FROM docker.io/golang:1.27-alpine AS api
 RUN go install -v \
     github.com/processone/ejabberd-api/cmd/ejabberd@latest \
     && mv bin/ejabberd bin/ejabberdapi
