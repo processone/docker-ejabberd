@@ -11,8 +11,7 @@ RUN apt-get update \
 
 RUN curl -fsSL https://code-server.dev/install.sh | sh
 
-RUN addgroup vscode --gid 1000 \
-    && adduser --shell /bin/bash --ingroup vscode vscode -u 1000
+RUN groupadd -g 1000 -r vscode && useradd -m -r -g 1000 -u 1000 vscode
 
 USER vscode
 
