@@ -48,7 +48,7 @@ RUN mkdir runtime \
     && cp -r /ejabberd/sql lib/ejabberd-*/priv
 
 # Runtime container
-FROM docker.io/alpine:3.22
+FROM docker.io/alpine:3.24
 ARG VERSION
 ARG VCS_REF
 ARG BUILD_DATE
